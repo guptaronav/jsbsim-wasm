@@ -7,6 +7,8 @@ import type {
   StageState,
   StageTimes,
   TelemetrySample,
+  ModelEditorState,
+  ModelEditorActions,
 } from "../types";
 
 const MAX_SAMPLES = 500;
@@ -78,6 +80,7 @@ export interface SimulationState {
   stageTimes: StageTimes;
   currentStage: FlightStage | null;
   intervalMs: number;
+  modelEditorState: ModelEditorState;
 }
 
 export interface SimulationActions {
@@ -86,6 +89,10 @@ export interface SimulationActions {
   reload: () => void;
   setIntervalMs: (ms: number) => void;
   stepOnce: () => void;
+  openFile: (filePath: string) => Promise<void>;
+  saveFile: () => Promise<void>;
+  closeEditor: () => void;
+  setFileContents: (content: string) => void;
 }
 
 export function useSimulation(): SimulationState & SimulationActions {
@@ -108,6 +115,13 @@ export function useSimulation(): SimulationState & SimulationActions {
   const [stageState, setStageState] = useState<StageState>(createStageState());
   const [stageTimes, setStageTimes] = useState<StageTimes>({});
   const [intervalMs, setIntervalMs] = useState(50);
+  const [modelEditorState, setModelEditorState] = useState<ModelEditorState>({
+    activeFile: null,
+    fileContents: "",
+    unsavedChanges: false,
+    isLoading: false,
+    error: null,
+  });
 
   const addEvent = useCallback((entry: Omit<EventEntry, "id">): void => {
     setEvents((prev) => {
@@ -345,6 +359,75 @@ export function useSimulation(): SimulationState & SimulationActions {
     runStep();
   }, [loading, manifest, runStep]);
 
+  const openFile = useCallback(async (filePath: string): Promise<void> => {
+    const sdk = sdkRef.current;
+    if (!sdk) return;
+    setModelEditorState((prev) => ({ ...prev, isLoading: true, error: null }));
+    try {
+      const content = sdk.readDataFile(filePath, "utf8") as string;
+      setModelEditorState((prev) => ({
+        ...prev,
+        activeFile: filePath,
+        fileContents: content,
+        unsavedChanges: false,
+        isLoading: false,
+      }));
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : String(err);
+      setModelEditorState((prev) => ({
+        ...prev,
+        isLoading: false,
+        error: `Failed to open file: ${errorMsg}`,
+      }));
+    }
+  }, []);
+
+  const saveFile = useCallback(async (): Promise<void> => {
+    const sdk = sdkRef.current;
+    const { activeFile, fileContents } = modelEditorState;
+    if (!sdk || !activeFile) return;
+    setModelEditorState((prev) => ({ ...prev, isLoading: true, error: null }));
+    try {
+      sdk.writeDataFile(activeFile, fileContents);
+      setModelEditorState((prev) => ({
+        ...prev,
+        unsavedChanges: false,
+        isLoading: false,
+      }));
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : String(err);
+      setModelEditorState((prev) => ({
+        ...prev,
+        isLoading: false,
+        error: `Failed to save file: ${errorMsg}`,
+      }));
+    }
+  }, [modelEditorState]);
+
+  const closeEditor = useCallback((): void => {
+    setModelEditorState({
+      activeFile: null,
+      fileContents: "",
+      unsavedChanges: false,
+      isLoading: false,
+      error: null,
+    });
+  }, []);
+
+  const setFileContents = useCallback((content: string): void => {
+    setModelEditorState((prev) => ({
+      ...prev,
+      fileContents: content,
+      unsavedChanges: content !== prev.fileContents,
+    }));
+  }, []);
+
+  const modelEditorActions: ModelEditorActions = {
+    openFile,
+    saveFile,
+    closeEditor,
+  };
+
   return {
     sdk: sdkRef.current,
     manifest,
@@ -359,11 +442,14 @@ export function useSimulation(): SimulationState & SimulationActions {
     stageTimes,
     currentStage,
     intervalMs,
+    modelEditorState,
     startLaunch,
     pauseResume,
     reload: () => void bootstrapScenario(),
     setIntervalMs,
     stepOnce,
+    ...modelEditorActions,
+    setFileContents,
   };
 }
 
