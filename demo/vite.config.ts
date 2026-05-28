@@ -19,6 +19,9 @@ export default defineConfig({
       "@sdk": path.resolve(__dirname, "../src/index.ts")
     }
   },
+  optimizeDeps: {
+    exclude: ["@monaco-editor/react"]
+  },
   server: {
     fs: {
       allow: [path.resolve(__dirname, "..")]

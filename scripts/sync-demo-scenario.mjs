@@ -178,6 +178,11 @@ function main() {
       verticalVelocityFps: "velocities/h-dot-fps",
       verticalAccelerationFps2: "accelerations/a-pilot-z-ft_sec2",
       thrustProperty: "propulsion/rocket_thrust",
+      latDeg: "position/lat-geod-deg",
+      lonDeg: "position/long-gc-deg",
+      pitchRad: "attitude/pitch-rad",
+      rollRad: "attitude/roll-rad",
+      airspeedFps: "velocities/vt-fps",
     },
     rocket: {
       thrustLbf: 24,
