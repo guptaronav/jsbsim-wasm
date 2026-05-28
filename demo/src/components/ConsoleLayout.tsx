@@ -3,6 +3,7 @@ import ControlPanel from "./ControlPanel";
 import EventFeed from "./EventFeed";
 import RocketCanvas from "./RocketCanvas";
 import TrajectoryMap from "./TrajectoryMap";
+import ModelEditorPanel from "./ModelEditorPanel";
 
 interface ConsoleLayoutProps extends SimulationState, SimulationActions {}
 
@@ -20,11 +21,16 @@ export default function ConsoleLayout({
   stageTimes,
   currentStage,
   intervalMs,
+  modelEditorState,
   startLaunch,
   pauseResume,
   reload,
   setIntervalMs,
   stepOnce,
+  openFile,
+  saveFile,
+  closeEditor,
+  setFileContents,
 }: ConsoleLayoutProps) {
   const latest = samples[samples.length - 1];
 
@@ -58,14 +64,17 @@ export default function ConsoleLayout({
         />
       </div>
 
-      {/* Middle-right: placeholder for charts/editor */}
-      <div className="console-panel placeholder-panel">
-        <div className="panel-label">Charts / Editor</div>
-        <div className="placeholder-content">
-          <p style={{ textAlign: "center", color: "var(--muted)", marginTop: "2rem" }}>
-            Telemetry charts and model editor coming soon
-          </p>
-        </div>
+      {/* Middle-right: model editor */}
+      <div className="console-panel editor-panel">
+        <ModelEditorPanel
+          sdk={sdk}
+          manifest={manifest}
+          modelEditorState={modelEditorState}
+          modelEditorActions={{ openFile, saveFile, closeEditor }}
+          running={running}
+          onReload={reload}
+          setFileContents={setFileContents}
+        />
       </div>
 
       {/* Bottom: event feed spans full width on small screens, or shares space */}

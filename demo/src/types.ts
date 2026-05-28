@@ -55,3 +55,17 @@ export interface EventEntry {
   level: EventLevel;
   message: string;
 }
+
+export interface ModelEditorState {
+  activeFile: string | null;
+  fileContents: string;
+  unsavedChanges: boolean;
+  isLoading: boolean;
+  error: string | null;
+}
+
+export interface ModelEditorActions {
+  openFile: (filePath: string) => Promise<void>;
+  saveFile: () => Promise<void>;
+  closeEditor: () => void;
+}
