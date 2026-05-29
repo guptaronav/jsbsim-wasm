@@ -581,6 +581,172 @@ body {
   border-radius: 4px;
 }
 
+/* Phase 10: Trajectory Visualization */
+
+.trajectory-display {
+  width: 100%;
+  padding: var(--space-md);
+  background: var(--color-surface);
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+}
+
+.trajectory-display canvas {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Flight Envelope Panel */
+
+.flight-envelope-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  background: var(--color-surface);
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+}
+
+.panel-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+  padding: 0;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--space-sm);
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  background: var(--color-background);
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  transition: all var(--transition-micro);
+}
+
+.stat-item:hover {
+  background: var(--color-muted);
+  border-color: var(--color-primary);
+}
+
+.stat-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.stat-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.stat-label {
+  font-size: 0.7rem;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+.stat-value {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Altitude profile */
+
+.altitude-profile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.profile-label {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+.profile-bar {
+  display: flex;
+  height: 24px;
+  background: var(--color-background);
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+
+.profile-min {
+  background: rgba(34, 197, 94, 0.4); /* Green - min altitude */
+  transition: width var(--transition-micro);
+}
+
+.profile-max {
+  background: linear-gradient(
+    to right,
+    rgba(34, 197, 94, 0.4),
+    rgba(239, 68, 68, 0.4)
+  ); /* Green to red - altitude gain */
+  transition: width var(--transition-micro);
+}
+
+/* Performance indicators */
+
+.performance-indicators {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.indicator {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.indicator-label {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.indicator-bar {
+  height: 8px;
+  background: var(--color-background);
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+
+.indicator-fill {
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    #3b82f6,
+    #06b6d4
+  );
+  border-radius: 4px;
+  transition: width var(--transition-micro);
+}
+
 .kicker {
   margin: 0 0 var(--space-xs);
   font-family: var(--font-mono);
