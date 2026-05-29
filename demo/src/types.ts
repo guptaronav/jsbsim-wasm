@@ -69,3 +69,47 @@ export interface ModelEditorActions {
   saveFile: () => Promise<void>;
   closeEditor: () => void;
 }
+
+export interface Vector3 {
+  x: number;
+  y: number;
+  z: number;
+}
+
+export interface AircraftState {
+  position: Vector3; // Cartesian world coordinates
+  velocity: Vector3;
+  attitude: {
+    roll: number;
+    pitch: number;
+    yaw: number;
+  };
+  latitude: number;
+  longitude: number;
+  altitude: number;
+  airspeed: number;
+  mach: number;
+  verticalVelocity: number;
+}
+
+export interface SimulationEngineState {
+  isInitialized: boolean;
+  isRunning: boolean;
+  isPaused: boolean;
+  currentTime: number; // Simulation time in seconds
+  timeStep: number; // dt per frame in seconds
+  simSpeed: number; // 1.0 = real-time, 2.0 = 2x speed
+  aircraftState: AircraftState;
+  trajectoryHistory: Vector3[];
+  eventLog: SimulationEvent[];
+}
+
+export interface SimulationEvent {
+  id: number;
+  timestamp: number; // Real-world timestamp (ms)
+  simTime: number; // Simulation time (seconds)
+  type: "engine_start" | "gear_up" | "altitude_milestone" | "overspeed" | "stall" | "engine_stop" | "generic";
+  level: "info" | "warning" | "critical";
+  message: string;
+  data?: Record<string, unknown>;
+}
