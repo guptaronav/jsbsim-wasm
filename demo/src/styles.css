@@ -2827,3 +2827,57 @@ button:disabled {
   font-family: var(--font-mono);
   color: var(--color-text-secondary);
 }
+
+/* ============================================================
+   ErrorBoundary
+   ============================================================ */
+
+.error-boundary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: var(--color-bg, #0f172a);
+}
+
+.error-boundary.light {
+  background: var(--color-bg, #f8fafc);
+}
+
+.error-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg, 1.5rem);
+  text-align: center;
+  max-width: 480px;
+  padding: var(--space-xl, 2rem);
+}
+
+.error-icon {
+  font-size: 3rem;
+  color: #f59e0b;
+}
+
+.error-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text, #f1f5f9);
+  margin: 0;
+}
+
+.error-boundary.light .error-title {
+  color: var(--color-text, #0f172a);
+}
+
+.error-message {
+  color: var(--color-text-secondary, #94a3b8);
+  font-family: var(--font-mono, monospace);
+  font-size: 0.875rem;
+  margin: 0;
+  word-break: break-word;
+}
+
+.error-reset {
+  margin-top: var(--space-sm, 0.5rem);
+}
