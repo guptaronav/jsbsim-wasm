@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:debug": "playwright test --debug"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
@@ -15,9 +18,11 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-leaflet": "^5.0.0",
-    "recharts": "^2.15.4"
+    "recharts": "^2.15.4",
+    "three": "^r128"
   },
   "devDependencies": {
+    "@playwright/test": "^1.48.0",
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.7",
     "@vitejs/plugin-react-swc": "^3.11.0",
