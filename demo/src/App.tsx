@@ -44,6 +44,9 @@ export default function App() {
           samples={sim.samples}
           events={sim.events}
           intervalMs={sim.intervalMs}
+          stageState={sim.stageState}
+          stageTimes={sim.stageTimes}
+          currentStage={sim.currentStage}
           startLaunch={sim.startLaunch}
           pauseResume={sim.pauseResume}
           reload={sim.reload}
