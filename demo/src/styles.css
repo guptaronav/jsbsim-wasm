@@ -2726,3 +2726,104 @@ button:disabled {
   margin: 0;
   max-width: 300px;
 }
+
+/* ============================================================
+   FlightStages
+   ============================================================ */
+
+.flight-stages {
+  width: 100%;
+}
+
+.stages-idle {
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+  font-style: italic;
+  padding: var(--space-sm, 0.5rem) 0;
+}
+
+.stages-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: var(--space-xs, 0.25rem) 0;
+}
+
+.stage-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm, 0.5rem);
+  padding: 6px 0;
+  position: relative;
+  opacity: 0.4;
+  transition: opacity var(--duration-fast, 150ms) ease;
+}
+
+.stage-item.completed {
+  opacity: 1;
+}
+
+.stage-item.current {
+  opacity: 1;
+}
+
+.stage-connector {
+  position: absolute;
+  left: 11px;
+  top: -6px;
+  width: 2px;
+  height: 6px;
+  background: var(--color-border);
+  transition: background var(--duration-normal, 300ms) ease;
+}
+
+.stage-connector.done {
+  background: var(--color-primary, #0ea5e9);
+}
+
+.stage-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  background: var(--color-surface);
+  transition: border-color var(--duration-normal, 300ms) ease,
+              background var(--duration-normal, 300ms) ease;
+}
+
+.stage-item.completed .stage-dot {
+  border-color: var(--color-primary, #0ea5e9);
+  background: color-mix(in srgb, var(--color-primary, #0ea5e9) 15%, transparent);
+}
+
+.stage-item.current .stage-dot {
+  border-color: var(--color-accent, #f59e0b);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent, #f59e0b) 20%, transparent);
+}
+
+.stage-icon {
+  font-size: 0.7rem;
+}
+
+.stage-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.stage-name {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.stage-time {
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  color: var(--color-text-secondary);
+}

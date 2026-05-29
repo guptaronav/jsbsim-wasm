@@ -8,7 +8,10 @@ import { useMemo, useState } from "react";
 import type {
   AircraftState,
   EventEntry,
+  FlightStage,
   SimulationEvent,
+  StageState,
+  StageTimes,
   TelemetrySample,
 } from "../types";
 import type { FlightStatistics, TrajectoryPoint } from "../lib/TrajectoryTracker";
@@ -19,6 +22,7 @@ import FlightViewer3D from "./FlightViewer3D";
 import SimulationEventFeed from "./SimulationEventFeed";
 import ParameterEditor, { type Parameter } from "./ParameterEditor";
 import TelemetryCharts from "./TelemetryCharts";
+import FlightStages from "./FlightStages";
 import { exportAsCsv } from "../lib/exportData";
 
 export interface ConsoleLayoutProps {
@@ -30,6 +34,9 @@ export interface ConsoleLayoutProps {
   samples: TelemetrySample[];
   events: EventEntry[];
   intervalMs: number;
+  stageState: StageState;
+  stageTimes: StageTimes;
+  currentStage: FlightStage | null;
   startLaunch: () => void;
   pauseResume: () => void;
   reload: () => void;
@@ -216,6 +223,9 @@ export default function ConsoleLayout({
   samples,
   events,
   intervalMs,
+  stageState,
+  stageTimes,
+  currentStage,
   startLaunch,
   pauseResume,
   reload,
@@ -338,6 +348,16 @@ export default function ConsoleLayout({
         {/* Right column: Events and parameters */}
         <section className="console-section event-panel">
           <div className="section-container">
+            {/* Flight Stages */}
+            <div className="panel-card">
+              <FlightStages
+                stageState={stageState}
+                stageTimes={stageTimes}
+                currentStage={currentStage}
+                isDarkMode={isDarkMode}
+              />
+            </div>
+
             {/* Parameter Editor */}
             <div className="panel-card">
               <ParameterEditor
