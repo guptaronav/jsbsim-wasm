@@ -1,9 +1,17 @@
 import { useSimulation } from "./hooks/useSimulation";
+import { useTheme } from "./hooks/useTheme";
 import ConsoleLayout from "./components/ConsoleLayout";
 import ThemeToggle from "./components/ThemeToggle";
 
 export default function App() {
   const sim = useSimulation();
+  const { theme } = useTheme();
+
+  const isDarkMode =
+    theme === "dark" ||
+    (theme === "system" &&
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches);
 
   return (
     <div className="app-shell">
@@ -22,7 +30,22 @@ export default function App() {
       </header>
 
       <section className="console-container">
-        <ConsoleLayout {...sim} />
+        <ConsoleLayout
+          status={sim.status}
+          loading={sim.loading}
+          running={sim.running}
+          launched={sim.launched}
+          launchConsumed={sim.launchConsumed}
+          samples={sim.samples}
+          events={sim.events}
+          intervalMs={sim.intervalMs}
+          startLaunch={sim.startLaunch}
+          pauseResume={sim.pauseResume}
+          reload={sim.reload}
+          setIntervalMs={sim.setIntervalMs}
+          stepOnce={sim.stepOnce}
+          isDarkMode={isDarkMode}
+        />
       </section>
     </div>
   );

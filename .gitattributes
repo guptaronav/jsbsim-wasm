@@ -1,0 +1,3 @@
+# Explicitly disable LFS filter for this repo - no files are LFS-tracked
+# Without this, the global git-lfs config triggers osxkeychain auth prompts that hang
+* filter=
