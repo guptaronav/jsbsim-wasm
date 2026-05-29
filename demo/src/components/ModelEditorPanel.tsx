@@ -1,4 +1,4 @@
-import { JSBSimSdk } from "@jsbsim/wasm";
+import { JSBSimSdk } from "@sdk";
 import { useCallback } from "react";
 import { ScenarioManifest, ModelEditorState, ModelEditorActions } from "../types";
 import FileTree from "./FileTree";

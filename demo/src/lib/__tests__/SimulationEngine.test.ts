@@ -204,7 +204,7 @@ describe("SimulationEngine", () => {
     expect(engine.getState().simTime).toBe(10.5);
   });
 
-  it("should detect altitude milestone events", (done) => {
+  it("should detect altitude milestone events", (done: () => void) => {
     // Create an SDK that crosses 2000 ft threshold
     const customSdk = {
       ...createMockSdk(),

@@ -108,7 +108,7 @@ test.describe("Flight Simulation Console", () => {
     let previousCount = 0;
     for (let i = 0; i < 3; i++) {
       const text = await footerText.textContent();
-      const match = text.match(/Trajectory: (\d+) points/);
+      const match = text?.match(/Trajectory: (\d+) points/);
       const currentCount = match ? parseInt(match[1]) : 0;
 
       if (i > 0) {
@@ -258,7 +258,7 @@ test.describe("Flight Simulation Console", () => {
 
     // Get initial footer state
     let footerText = await page.locator(".footer-text").textContent();
-    const initialEventMatch = footerText.match(/Events: (\d+)/);
+    const initialEventMatch = footerText?.match(/Events: (\d+)/);
     const initialEvents = initialEventMatch ? parseInt(initialEventMatch[1]) : 0;
 
     // Pause
@@ -274,7 +274,7 @@ test.describe("Flight Simulation Console", () => {
 
     // Event count should increase
     footerText = await page.locator(".footer-text").textContent();
-    const finalEventMatch = footerText.match(/Events: (\d+)/);
+    const finalEventMatch = footerText?.match(/Events: (\d+)/);
     const finalEvents = finalEventMatch ? parseInt(finalEventMatch[1]) : 0;
 
     expect(finalEvents).toBeGreaterThanOrEqual(initialEvents);
