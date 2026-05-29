@@ -12,13 +12,14 @@ const createMockSdk = (): Partial<JSBSimSdk> => {
       return true;
     }),
     getPropertyValue: vi.fn((prop: string) => {
-      if (prop.includes("alt")) return 1000;
-      if (prop.includes("lat")) return 40.0;
-      if (prop.includes("lon")) return -105.0;
+      // Match property paths from createMockManifest()
+      if (prop.includes("h-agl") || prop.includes("h-sl")) return 1000; // altitude
+      if (prop.includes("latitude") || prop.includes("lat-geod")) return 40.0;
+      if (prop.includes("longitude") || prop.includes("long-gc")) return -105.0;
       if (prop.includes("pitch")) return 0.1;
       if (prop.includes("roll")) return -0.05;
-      if (prop.includes("velocity")) return 100;
-      if (prop.includes("airspeed")) return 150;
+      if (prop.includes("vd-fps") || prop.includes("h-dot")) return 100; // vertical velocity
+      if (prop.includes("vc-fps") || prop.includes("vt-fps")) return 150; // airspeed
       return 0;
     }),
     setPropertyValue: vi.fn(),
@@ -204,17 +205,17 @@ describe("SimulationEngine", () => {
     expect(engine.getState().simTime).toBe(10.5);
   });
 
-  it("should detect altitude milestone events", (done: () => void) => {
-    // Create an SDK that crosses 2000 ft threshold
+  it("should detect altitude milestone events", () => {
+    // Create an SDK that rapidly gains altitude past a 1000 ft milestone
+    let altitudeOverride = 500;
     const customSdk = {
       ...createMockSdk(),
       getPropertyValue: vi.fn((prop: string) => {
-        if (prop.includes("alt")) {
-          // Simulate climbing past 2000 ft
-          const simTime = (customSdk.getSimTime as any)();
-          return 1000 + simTime * 50000; // Rapid altitude gain
+        if (prop.includes("h-agl") || prop.includes("h-sl")) {
+          altitudeOverride += 200; // Climb 200 ft per step
+          return altitudeOverride;
         }
-        return (createMockSdk().getPropertyValue as any)(prop);
+        return 0;
       }),
     };
 
@@ -223,7 +224,6 @@ describe("SimulationEngine", () => {
     });
 
     let eventReceived = false;
-
     customEngine.onEvent((event) => {
       if (event.type === "altitude_milestone") {
         eventReceived = true;
@@ -232,15 +232,12 @@ describe("SimulationEngine", () => {
 
     customEngine.initialize();
 
-    // Step multiple times to trigger altitude milestone
-    for (let i = 0; i < 50; i++) {
+    // Step enough times to cross the 1000 ft milestone
+    for (let i = 0; i < 10; i++) {
       customEngine.stepOnce();
       if (eventReceived) break;
     }
 
-    // Event should be detected (depending on mock behavior)
-    // This test may not trigger the exact condition, but validates the mechanism
-    expect(eventReceived || customEngine.getState().trajectoryHistory.length > 0).toBe(true);
-    done();
+    expect(eventReceived).toBe(true);
   });
 });
