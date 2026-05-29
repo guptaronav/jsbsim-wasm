@@ -2346,10 +2346,8 @@ button:disabled {
   overflow: hidden;
 }
 
-.console-layout.dark {
-  background: var(--color-background-dark);
-  color: var(--color-text-dark);
-}
+/* Dark mode inherited from :root via media query or [data-theme="dark"] */
+
 
 /* Header */
 .console-header {
