@@ -1,6 +1,7 @@
 import { useSimulation } from "./hooks/useSimulation";
 import { useTheme } from "./hooks/useTheme";
 import ConsoleLayout from "./components/ConsoleLayout";
+import LoadingScreen from "./components/LoadingScreen";
 import ThemeToggle from "./components/ThemeToggle";
 
 export default function App() {
@@ -12,6 +13,10 @@ export default function App() {
     (theme === "system" &&
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-color-scheme: dark)").matches);
+
+  if (sim.loading) {
+    return <LoadingScreen status={sim.status} isDarkMode={isDarkMode} />;
+  }
 
   return (
     <div className="app-shell">
