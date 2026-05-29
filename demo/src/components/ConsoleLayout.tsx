@@ -18,6 +18,8 @@ import FlightEnvelopePanel from "./FlightEnvelopePanel";
 import FlightViewer3D from "./FlightViewer3D";
 import SimulationEventFeed from "./SimulationEventFeed";
 import ParameterEditor, { type Parameter } from "./ParameterEditor";
+import TelemetryCharts from "./TelemetryCharts";
+import { exportAsCsv } from "../lib/exportData";
 
 export interface ConsoleLayoutProps {
   status: string;
@@ -325,6 +327,11 @@ export default function ConsoleLayout({
                 isDarkMode={isDarkMode}
               />
             </div>
+
+            {/* Telemetry Charts */}
+            <div className="panel-card">
+              <TelemetryCharts samples={samples} isDarkMode={isDarkMode} />
+            </div>
           </div>
         </section>
 
@@ -356,6 +363,15 @@ export default function ConsoleLayout({
             Events: {events.length} | Trajectory: {trajectoryPoints.length} points |
             Speed: {simSpeed.toFixed(1)}×
           </span>
+          {samples.length > 0 && (
+            <button
+              className="btn-export"
+              onClick={() => exportAsCsv(samples)}
+              title="Export flight data as CSV"
+            >
+              ↓ Export CSV
+            </button>
+          )}
         </div>
       </footer>
     </div>
