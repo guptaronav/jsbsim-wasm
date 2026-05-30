@@ -11,7 +11,12 @@
     "lonDeg": "position/long-gc-deg",
     "pitchRad": "attitude/theta-rad",
     "rollRad": "attitude/phi-rad",
-    "airspeedFps": "velocities/vt-fps"
+    "yawRad": "attitude/psi-rad",
+    "airspeedFps": "velocities/vt-fps",
+    "machNumber": "velocities/mach",
+    "vnFps": "velocities/vn-fps",
+    "veFps": "velocities/ve-fps",
+    "vdFps": "velocities/vd-fps"
   },
   "rocket": {
     "thrustLbf": 24,

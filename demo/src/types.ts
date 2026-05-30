@@ -33,7 +33,12 @@ export interface ScenarioManifest {
     lonDeg: string;
     pitchRad: string;
     rollRad: string;
+    yawRad: string;
     airspeedFps: string;
+    machNumber: string;
+    vnFps: string;  // north velocity component
+    veFps: string;  // east velocity component
+    vdFps: string;  // down velocity component
   };
   rocket: {
     thrustLbf: number;

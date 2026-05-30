@@ -13,13 +13,18 @@ const createMockSdk = (): Partial<JSBSimSdk> => {
     }),
     getPropertyValue: vi.fn((prop: string) => {
       // Match property paths from createMockManifest()
-      if (prop.includes("h-agl") || prop.includes("h-sl")) return 1000; // altitude
-      if (prop.includes("latitude") || prop.includes("lat-geod")) return 40.0;
-      if (prop.includes("longitude") || prop.includes("long-gc")) return -105.0;
-      if (prop.includes("pitch")) return 0.1;
-      if (prop.includes("roll")) return -0.05;
-      if (prop.includes("vd-fps") || prop.includes("h-dot")) return 100; // vertical velocity
-      if (prop.includes("vc-fps") || prop.includes("vt-fps")) return 150; // airspeed
+      if (prop.includes("h-agl") || prop.includes("h-sl")) return 1000; // altitude ft
+      if (prop.includes("lat-geod")) return 40.0;
+      if (prop.includes("long-gc")) return -105.0;
+      if (prop.includes("theta") || prop.includes("pitch")) return 0.1;
+      if (prop.includes("phi") || prop.includes("roll")) return -0.05;
+      if (prop.includes("psi") || prop.includes("yaw")) return 1.57;
+      if (prop.includes("h-dot") || (prop.includes("vd-fps") && !prop.includes("vn") && !prop.includes("ve"))) return 100; // vert velocity
+      if (prop.includes("vn-fps")) return 80;  // north velocity
+      if (prop.includes("ve-fps")) return 30;  // east velocity
+      if (prop.includes("vt-fps") || prop.includes("vc-fps")) return 150; // airspeed
+      if (prop.includes("mach")) return 0.13;
+      if (prop.includes("accel")) return 16.1;
       return 0;
     }),
     setPropertyValue: vi.fn(),
@@ -29,12 +34,17 @@ const createMockSdk = (): Partial<JSBSimSdk> => {
 const createMockManifest = () => ({
   telemetry: {
     altitudeFt: "/position/h-agl-ft",
-    latDeg: "/position/latitude-geod-deg",
-    lonDeg: "/position/longitude-geod-deg",
-    pitchRad: "/attitude/pitch-rad",
-    rollRad: "/attitude/roll-rad",
-    airspeedFps: "/velocities/vc-fps",
-    verticalVelocityFps: "/velocities/vd-fps",
+    latDeg: "/position/lat-geod-deg",
+    lonDeg: "/position/long-gc-deg",
+    pitchRad: "/attitude/theta-rad",
+    rollRad: "/attitude/phi-rad",
+    yawRad: "/attitude/psi-rad",
+    airspeedFps: "/velocities/vt-fps",
+    machNumber: "/velocities/mach",
+    vnFps: "/velocities/vn-fps",
+    veFps: "/velocities/ve-fps",
+    vdFps: "/velocities/vd-fps",
+    verticalVelocityFps: "/velocities/h-dot-fps",
     verticalAccelerationFps2: "/accelerations/vert-accel-fpm-s",
     thrustProperty: "/propulsion/engine[0]/thrust-lbf",
   },

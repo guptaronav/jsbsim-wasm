@@ -1,5 +1,6 @@
 import { JSBSimSdk } from "@sdk";
 import type { AircraftState, SimulationEvent, Vector3 } from "../types";
+import { geodeticToECEF } from "./CoordinateTransform";
 
 export interface SimulationEngineConfig {
   targetFps: number; // Usually 60
@@ -168,19 +169,32 @@ export class SimulationEngine {
     const m = this.manifest;
     const sdk = this.sdk;
 
+    const lat = sdk.getPropertyValue(m.telemetry.latDeg);
+    const lon = sdk.getPropertyValue(m.telemetry.lonDeg);
+    const alt = sdk.getPropertyValue(m.telemetry.altitudeFt) * 0.3048; // ft → m
+
+    // ECEF Cartesian position derived from geodetic coordinates
+    const position: Vector3 = geodeticToECEF(lat, lon, alt);
+
+    // NED (North-East-Down) velocity → ENU (East-North-Up) for 3D display
+    const vn = sdk.getPropertyValue(m.telemetry.vnFps);
+    const ve = sdk.getPropertyValue(m.telemetry.veFps);
+    const vd = sdk.getPropertyValue(m.telemetry.vdFps);
+    const velocity: Vector3 = { x: ve, y: vn, z: -vd }; // ENU convention
+
     return {
-      position: { x: 0, y: 0, z: 0 }, // TODO: Cartesian conversion in Phase 10
-      velocity: { x: 0, y: 0, z: 0 }, // TODO: Velocity vector conversion
+      position,
+      velocity,
       attitude: {
         roll: sdk.getPropertyValue(m.telemetry.rollRad),
         pitch: sdk.getPropertyValue(m.telemetry.pitchRad),
-        yaw: 0, // TODO: Read yaw from JSBSim
+        yaw: sdk.getPropertyValue(m.telemetry.yawRad),
       },
-      latitude: sdk.getPropertyValue(m.telemetry.latDeg),
-      longitude: sdk.getPropertyValue(m.telemetry.lonDeg),
+      latitude: lat,
+      longitude: lon,
       altitude: sdk.getPropertyValue(m.telemetry.altitudeFt),
       airspeed: sdk.getPropertyValue(m.telemetry.airspeedFps),
-      mach: 0, // TODO: Read Mach number from JSBSim
+      mach: sdk.getPropertyValue(m.telemetry.machNumber),
       verticalVelocity: sdk.getPropertyValue(m.telemetry.verticalVelocityFps),
     };
   }
