@@ -14,6 +14,8 @@ export interface FlightStatistics {
 export interface TrajectoryPoint extends Vector3 {
   speed?: number;
   verticalVelocity?: number;
+  /** Resultant acceleration in ft/s² (used for G-force calculation) */
+  acceleration?: number;
   timestamp?: number;
 }
 
@@ -93,6 +95,8 @@ export class TrajectoryTracker {
       };
     }
 
+    const G_FPS2 = 32.174; // 1 g in ft/s²
+
     let maxAlt = this.points[0].z;
     let minAlt = this.points[0].z;
     let maxSpeed = 0;
@@ -107,6 +111,10 @@ export class TrajectoryTracker {
       }
       if (point.verticalVelocity !== undefined) {
         maxVertVel = Math.max(maxVertVel, Math.abs(point.verticalVelocity));
+      }
+      if (point.acceleration !== undefined) {
+        // Convert resultant acceleration to g-units
+        maxG = Math.max(maxG, Math.abs(point.acceleration) / G_FPS2);
       }
     }
 
@@ -123,7 +131,7 @@ export class TrajectoryTracker {
       maxSpeed: maxSpeed,
       maxVerticalVelocity: maxVertVel,
       flightTime: flightTime,
-      maxG: maxG, // TODO: Calculate from accelerations
+      maxG,
       range: range,
       pointCount: this.points.length,
     };

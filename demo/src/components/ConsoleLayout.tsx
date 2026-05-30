@@ -111,6 +111,7 @@ function sampleToPoint(sample: TelemetrySample): TrajectoryPoint {
     z: sample.altitude,
     speed: sample.airspeedFps,
     verticalVelocity: sample.velocity,
+    acceleration: sample.acceleration,
   };
 }
 
@@ -146,16 +147,20 @@ function computeStatistics(samples: TelemetrySample[]): FlightStatistics {
     };
   }
 
+  const G_FPS2 = 32.174; // 1 g in ft/s²
+
   let maxAltitude = samples[0].altitude;
   let minAltitude = samples[0].altitude;
   let maxSpeed = 0;
   let maxVerticalVelocity = 0;
+  let maxG = 0;
 
   for (const sample of samples) {
     maxAltitude = Math.max(maxAltitude, sample.altitude);
     minAltitude = Math.min(minAltitude, sample.altitude);
     maxSpeed = Math.max(maxSpeed, sample.airspeedFps);
     maxVerticalVelocity = Math.max(maxVerticalVelocity, Math.abs(sample.velocity));
+    maxG = Math.max(maxG, Math.abs(sample.acceleration) / G_FPS2);
   }
 
   const first = samples[0];
@@ -180,7 +185,7 @@ function computeStatistics(samples: TelemetrySample[]): FlightStatistics {
     maxSpeed,
     maxVerticalVelocity,
     flightTime,
-    maxG: 0,
+    maxG,
     range,
     pointCount: samples.length,
   };
