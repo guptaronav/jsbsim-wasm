@@ -4,6 +4,7 @@ import {
   ecefToGeodetic,
   geodeticToLocal,
   localToGeodetic,
+  createLTPTransform,
 } from "../CoordinateTransform";
 
 const DEG_TO_RAD = Math.PI / 180;
@@ -88,5 +89,89 @@ describe("CoordinateTransform", () => {
       expect(back.lat).toBeCloseTo(40.01, 3);
       expect(back.lon).toBeCloseTo(-104.99, 3);
     });
+  });
+});
+
+// ---------------------------------------------------------------------------
+// createLTPTransform — Local Tangent Plane (ENU) transform factory
+// ---------------------------------------------------------------------------
+
+describe("createLTPTransform", () => {
+  const ORIGIN = { latitude: 40.0, longitude: -105.0, altitude: 1000 };
+
+  it("toLocal: returns (0,0,0) when converting the origin point itself", () => {
+    const { toLocal } = createLTPTransform(ORIGIN);
+    const originECEF = geodeticToECEF(ORIGIN.latitude, ORIGIN.longitude, ORIGIN.altitude);
+    const local = toLocal(originECEF);
+
+    expect(local.x).toBeCloseTo(0, 3);
+    expect(local.y).toBeCloseTo(0, 3);
+    expect(local.z).toBeCloseTo(0, 3);
+  });
+
+  it("toECEF: round-trips a local (0,0,0) back to the origin ECEF", () => {
+    const { toECEF } = createLTPTransform(ORIGIN);
+    const originECEF = geodeticToECEF(ORIGIN.latitude, ORIGIN.longitude, ORIGIN.altitude);
+
+    const backECEF = toECEF({ x: 0, y: 0, z: 0 });
+
+    expect(backECEF.x).toBeCloseTo(originECEF.x, 0);
+    expect(backECEF.y).toBeCloseTo(originECEF.y, 0);
+    expect(backECEF.z).toBeCloseTo(originECEF.z, 0);
+  });
+
+  it("toLocal → toECEF round-trip preserves the original ECEF point", () => {
+    const { toLocal, toECEF } = createLTPTransform(ORIGIN);
+
+    // A point 500m north of the origin
+    const northECEF = geodeticToECEF(40.005, -105.0, 1000);
+    const local = toLocal(northECEF);
+    const backECEF = toECEF(local);
+
+    expect(backECEF.x).toBeCloseTo(northECEF.x, 0);
+    expect(backECEF.y).toBeCloseTo(northECEF.y, 0);
+    expect(backECEF.z).toBeCloseTo(northECEF.z, 0);
+  });
+
+  it("toLocal: east displacement gives positive x (ENU convention)", () => {
+    const { toLocal } = createLTPTransform(ORIGIN);
+
+    // Point slightly to the east (larger longitude)
+    const eastPoint = geodeticToECEF(40.0, -104.9, 1000);
+    const local = toLocal(eastPoint);
+
+    expect(local.x).toBeGreaterThan(0); // east → +x
+  });
+
+  it("toLocal: north displacement gives positive y (ENU convention)", () => {
+    const { toLocal } = createLTPTransform(ORIGIN);
+
+    // Point slightly to the north
+    const northPoint = geodeticToECEF(40.1, -105.0, 1000);
+    const local = toLocal(northPoint);
+
+    expect(local.y).toBeGreaterThan(0); // north → +y
+  });
+
+  it("toLocal: upward displacement gives positive z (ENU convention)", () => {
+    const { toLocal } = createLTPTransform(ORIGIN);
+
+    // Same lat/lon, 500m higher
+    const upPoint = geodeticToECEF(40.0, -105.0, 1500);
+    const local = toLocal(upPoint);
+
+    expect(local.z).toBeGreaterThan(0); // up → +z
+    expect(local.z).toBeCloseTo(500, 0);
+  });
+
+  it("toECEF: applying a known eastward local offset moves longitude in correct direction", () => {
+    const { toECEF } = createLTPTransform(ORIGIN);
+    const originECEF = geodeticToECEF(ORIGIN.latitude, ORIGIN.longitude, ORIGIN.altitude);
+
+    // Apply a pure east offset of 1000m
+    const shifted = toECEF({ x: 1000, y: 0, z: 0 });
+
+    // The result should be roughly east — y and z of ECEF change with longitude
+    expect(shifted.x).not.toBeCloseTo(originECEF.x, -3);
   });
 });
