@@ -11,7 +11,6 @@ export default function LoadingScreen({ status, isDarkMode = false }: LoadingScr
   return (
     <div className={`loading-screen ${isDarkMode ? "dark" : "light"}`}>
       <div className="loading-content">
-        <div className="loading-rocket">🚀</div>
         <h2 className="loading-title">JSBSim Flight Console</h2>
         <div className="loading-spinner">
           <div className="spinner-ring" />

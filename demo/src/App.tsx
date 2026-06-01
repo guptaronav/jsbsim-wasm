@@ -41,13 +41,17 @@ export default function App() {
       <div className="app-shell">
         <header className="hero">
           <div className="hero-controls">
-            <div>
-              <p className="kicker">🚀 JSBSim Simulation Console</p>
-              <h1>Hobby Rocket Flight Simulator</h1>
-              <p className="copy">
-                A fully browser-based simulation pipeline. Configure your rocket, launch, and watch real-time telemetry across
-                GPS trajectory, 2D visualization, flight events, and live property inspector.
+            <div className="hero-lead">
+              <p className="hero-eyebrow">Browser Flight Dynamics · JSBSim WebAssembly</p>
+              <h1 className="hero-title">
+                Hobby rocket <em>flight log.</em>
+              </h1>
+              <p className="hero-lede">
+                A complete simulation pipeline running entirely in the browser —
+                configure the model, launch, and read live telemetry across GPS
+                trajectory, 3D attitude, flight events, and a property inspector.
               </p>
+              <div className="hero-note">JSBSim flight dynamics, compiled to WebAssembly</div>
             </div>
             <ThemeToggle />
           </div>
@@ -72,6 +76,15 @@ export default function App() {
             setIntervalMs={sim.setIntervalMs}
             stepOnce={sim.stepOnce}
             isDarkMode={isDarkMode}
+            sdk={sim.sdk}
+            manifest={sim.manifest}
+            modelEditorState={sim.modelEditorState}
+            modelEditorActions={{
+              openFile: sim.openFile,
+              saveFile: sim.saveFile,
+              closeEditor: sim.closeEditor,
+            }}
+            setFileContents={sim.setFileContents}
           />
         </section>
       </div>

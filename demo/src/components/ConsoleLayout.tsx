@@ -5,10 +5,14 @@
  */
 
 import { useMemo, useState } from "react";
+import type { JSBSimSdk } from "@sdk";
 import type {
   AircraftState,
   EventEntry,
   FlightStage,
+  ModelEditorActions,
+  ModelEditorState,
+  ScenarioManifest,
   SimulationEvent,
   StageState,
   StageTimes,
@@ -23,7 +27,10 @@ import SimulationEventFeed from "./SimulationEventFeed";
 import ParameterEditor, { type Parameter } from "./ParameterEditor";
 import TelemetryCharts from "./TelemetryCharts";
 import FlightStages from "./FlightStages";
+import ModelEditorPanel from "./ModelEditorPanel";
 import { exportAsCsv } from "../lib/exportData";
+
+type ConsoleTab = "dashboard" | "editor";
 
 export interface ConsoleLayoutProps {
   status: string;
@@ -43,6 +50,12 @@ export interface ConsoleLayoutProps {
   setIntervalMs: (ms: number) => void;
   stepOnce: () => void;
   isDarkMode?: boolean;
+  // Model editor
+  sdk: JSBSimSdk | null;
+  manifest: ScenarioManifest | null;
+  modelEditorState: ModelEditorState;
+  modelEditorActions: ModelEditorActions;
+  setFileContents: (content: string) => void;
 }
 
 const BASE_INTERVAL_MS = 50;
@@ -237,8 +250,14 @@ export default function ConsoleLayout({
   setIntervalMs,
   stepOnce,
   isDarkMode = false,
+  sdk,
+  manifest,
+  modelEditorState,
+  modelEditorActions,
+  setFileContents,
 }: ConsoleLayoutProps) {
   const [parameters, setParameters] = useState<Parameter[]>(DEFAULT_PARAMETERS);
+  const [activeTab, setActiveTab] = useState<ConsoleTab>("dashboard");
 
   const trajectoryPoints = useMemo(() => samples.map(sampleToPoint), [samples]);
 
@@ -283,6 +302,24 @@ export default function ConsoleLayout({
       <header className="console-header">
         <div className="header-content">
           <h1 className="console-title">JSBSim Flight Console</h1>
+          <div className="header-center">
+            <nav className="console-tabs" aria-label="Console sections">
+              <button
+                className={`console-tab ${activeTab === "dashboard" ? "active" : ""}`}
+                onClick={() => setActiveTab("dashboard")}
+                aria-selected={activeTab === "dashboard"}
+              >
+                Dashboard
+              </button>
+              <button
+                className={`console-tab ${activeTab === "editor" ? "active" : ""}`}
+                onClick={() => setActiveTab("editor")}
+                aria-selected={activeTab === "editor"}
+              >
+                Model Editor
+              </button>
+            </nav>
+          </div>
           <div className="header-status">
             <div className={`status-indicator ${statusIndicatorClass}`} />
             <span className="status-text">{statusLabel}</span>
@@ -290,8 +327,24 @@ export default function ConsoleLayout({
         </div>
       </header>
 
-      {/* Main content - responsive grid */}
-      <main className="console-main">
+      {/* Model Editor tab */}
+      {activeTab === "editor" && (
+        <main className="console-editor-main">
+          <ModelEditorPanel
+            sdk={sdk}
+            manifest={manifest}
+            modelEditorState={modelEditorState}
+            modelEditorActions={modelEditorActions}
+            running={running}
+            onReload={async () => reload()}
+            setFileContents={setFileContents}
+          />
+        </main>
+      )}
+
+      {/* Dashboard tab - responsive grid */}
+      <main className="console-main" aria-hidden={activeTab === "editor"}
+        style={{ display: activeTab === "editor" ? "none" : undefined }}>
         {/* Left column: 3D viewer (primary focus) */}
         <section className="console-section primary-viewer">
           <div className="section-container">

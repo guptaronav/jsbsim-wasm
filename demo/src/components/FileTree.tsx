@@ -88,7 +88,7 @@ function FileTreeItem({
           </span>
         )}
         <span className="file-tree-icon">
-          {isFolder ? "📁" : "📄"}
+          {isFolder ? "▪" : "▫"}
         </span>
         <span className="file-tree-label">{node.name}</span>
       </div>
@@ -183,7 +183,7 @@ export default function FileTree({
             </span>
           )}
           <span className="file-tree-icon">
-            {isFolder ? "📁" : "📄"}
+            {isFolder ? "▪" : "▫"}
           </span>
           <span className="file-tree-label">{node.name}</span>
         </div>

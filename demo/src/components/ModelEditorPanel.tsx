@@ -61,13 +61,7 @@ export default function ModelEditorPanel({
         isLoading={modelEditorState.isLoading}
         unsavedChanges={modelEditorState.unsavedChanges}
         error={modelEditorState.error}
-        onChange={(content) => {
-          // This is handled by updating state in useSimulation
-          // For now, just track that content changed
-          if (content !== modelEditorState.fileContents) {
-            // Update will happen through the hook
-          }
-        }}
+        onChange={handleChange}
         onSave={modelEditorActions.saveFile}
         onSaveAndReload={handleSaveAndReload}
         onClose={modelEditorActions.closeEditor}

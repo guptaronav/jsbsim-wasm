@@ -1,27 +1,46 @@
-@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+/* Fonts loaded via <link> in index.html: Fraunces, DM Sans, JetBrains Mono */
 
-/* Light Mode (Default) */
+/*
+ * Editorial "flight log" design system.
+ * Warm-paper aesthetic: serif display, mono labels, 1px rules, graph-paper
+ * ground, restrained terracotta accent. Engineered to read like a designed
+ * instrument logbook rather than a generic telemetry dashboard.
+ */
+
+/* Light Mode (Default) — warm paper */
 :root {
-  /* Base colors */
-  --color-background: #FFFFFF;
-  --color-surface: #F8FAFC;
-  --color-surface-variant: #EFF6FC;
+  /* Editorial primitives — cool blueprint neutrals + sky-blue accent */
+  --paper: #FFFFFF;
+  --bg-tinted: #F1F5F9;
+  --ink: #0F172A;
+  --ink-soft: #475569;
+  --ink-faint: #64748B;
+  --rule: #E2E8F0;
+  --rule-soft: #EFF3F8;
+  --hi: #0EA5E9;            /* signature sky blue */
+  --grid: rgba(56, 116, 180, 0.06);
+  --radius: 2px;
+
+  /* Base colors (mapped onto legacy variable names) */
+  --color-background: #F6F9FC;
+  --color-surface: #FFFFFF;
+  --color-surface-variant: #F1F5F9;
   --color-on-surface: #0F172A;
   --color-on-surface-variant: #475569;
 
-  /* Primary (sky blue - launch pad light) */
+  /* Primary — sky blue (signature accent / primary action) */
   --color-primary: #0EA5E9;
   --color-on-primary: #FFFFFF;
   --color-primary-container: #E0F2FE;
   --color-on-primary-container: #0369A1;
 
-  /* Secondary (cyan - flight tracking) */
+  /* Secondary — cyan */
   --color-secondary: #06B6D4;
   --color-on-secondary: #FFFFFF;
   --color-secondary-container: #CFFAFE;
   --color-on-secondary-container: #0A505E;
 
-  /* Accent (orange - thrust/flame) */
+  /* Accent — orange (thrust/flame) */
   --color-accent: #F97316;
   --color-on-accent: #FFFFFF;
   --color-accent-container: #FFEDD5;
@@ -34,9 +53,9 @@
   --color-info: #3B82F6;
 
   /* UI elements */
-  --color-border: #E5E7EB;
-  --color-divider: #D1D5DB;
-  --color-disabled: #9CA3AF;
+  --color-border: #E2E8F0;
+  --color-divider: #CBD5E1;
+  --color-disabled: #94A3B8;
   --color-ring: #0EA5E9;
 
   /* Flight stages */
@@ -55,9 +74,9 @@
   --telemetry-thrust: #DC2626;
 
   /* Typography */
-  --font-display: 'Fredoka', system-ui, sans-serif;
-  --font-body: 'Nunito', system-ui, sans-serif;
-  --font-mono: 'IBM Plex Mono', monospace;
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'DM Sans', -apple-system, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
 
   /* Spacing */
   --space-xs: 4px;
@@ -69,19 +88,20 @@
   --space-3xl: 48px;
   --space-4xl: 64px;
 
-  /* Shadows */
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-  --shadow-md: 0 3px 6px rgba(0,0,0,0.15), 0 2px 4px rgba(0,0,0,0.12);
-  --shadow-lg: 0 10px 20px rgba(0,0,0,0.15), 0 3px 6px rgba(0,0,0,0.10);
+  /* Shadows — flat / restrained, structure comes from rules not elevation */
+  --shadow-sm: 0 1px 0 rgba(26, 31, 38, 0.04);
+  --shadow-md: 0 1px 2px rgba(26, 31, 38, 0.06);
+  --shadow-lg: 0 8px 28px rgba(26, 31, 38, 0.09);
 
   /* Transitions */
-  --transition-micro: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-long: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-micro: 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-base: 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-long: 300ms cubic-bezier(0.16, 1, 0.3, 1);
 
   /* Semantic aliases (used by components) */
   --color-text: var(--color-on-surface);
   --color-text-secondary: var(--color-on-surface-variant);
+  --color-text-muted: var(--ink-faint);
   --color-bg: var(--color-background);
   --color-surface-raised: var(--color-surface-variant);
   --duration-fast: 150ms;
@@ -90,27 +110,37 @@
   color-scheme: light;
 }
 
-/* Dark Mode */
+/* Dark Mode — warm espresso paper (system preference) */
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-background: #0B0B10;
-    --color-surface: #1A1A24;
-    --color-surface-variant: #2A2A35;
-    --color-on-surface: #F8FAFC;
+    --paper: #111722;
+    --bg-tinted: #1B2330;
+    --ink: #F1F5F9;
+    --ink-soft: #CBD5E1;
+    --ink-faint: #94A3B8;
+    --rule: #283143;
+    --rule-soft: #1B2330;
+    --hi: #38BDF8;
+    --grid: rgba(120, 160, 210, 0.05);
+
+    --color-background: #0B0F16;
+    --color-surface: #111722;
+    --color-surface-variant: #1B2330;
+    --color-on-surface: #F1F5F9;
     --color-on-surface-variant: #CBD5E1;
 
     --color-primary: #38BDF8;
-    --color-on-primary: #0F172A;
+    --color-on-primary: #0B0F16;
     --color-primary-container: #0C4A6E;
     --color-on-primary-container: #BAE6FD;
 
-    --color-secondary: #06D6D6;
-    --color-on-secondary: #000000;
+    --color-secondary: #22D3EE;
+    --color-on-secondary: #0B0F16;
     --color-secondary-container: #164E63;
     --color-on-secondary-container: #CFFAFE;
 
-    --color-accent: #FF8C42;
-    --color-on-accent: #0F172A;
+    --color-accent: #FB923C;
+    --color-on-accent: #0B0F16;
     --color-accent-container: #7C2D12;
     --color-on-accent-container: #FFEDD5;
 
@@ -119,18 +149,18 @@
     --color-error: #F87171;
     --color-info: #60A5FA;
 
-    --color-border: #374151;
-    --color-divider: #4B5563;
-    --color-disabled: #6B7280;
+    --color-border: #283143;
+    --color-divider: #334155;
+    --color-disabled: #64748B;
     --color-ring: #38BDF8;
 
-    --shadow-sm: 0 1px 3px rgba(0,0,0,0.4);
-    --shadow-md: 0 3px 6px rgba(0,0,0,0.5);
-    --shadow-lg: 0 10px 20px rgba(0,0,0,0.6);
+    --shadow-sm: 0 1px 0 rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 1px 3px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.6);
 
-    /* Semantic aliases */
     --color-text: var(--color-on-surface);
     --color-text-secondary: var(--color-on-surface-variant);
+    --color-text-muted: var(--ink-faint);
     --color-bg: var(--color-background);
     --color-surface-raised: var(--color-surface-variant);
 
@@ -140,9 +170,19 @@
 
 /* Manual theme overrides */
 [data-theme="light"] {
-  --color-background: #FFFFFF;
-  --color-surface: #F8FAFC;
-  --color-surface-variant: #EFF6FC;
+  --paper: #FFFFFF;
+  --bg-tinted: #F1F5F9;
+  --ink: #0F172A;
+  --ink-soft: #475569;
+  --ink-faint: #64748B;
+  --rule: #E2E8F0;
+  --rule-soft: #EFF3F8;
+  --hi: #0EA5E9;
+  --grid: rgba(56, 116, 180, 0.06);
+
+  --color-background: #F6F9FC;
+  --color-surface: #FFFFFF;
+  --color-surface-variant: #F1F5F9;
   --color-on-surface: #0F172A;
   --color-on-surface-variant: #475569;
   --color-primary: #0EA5E9;
@@ -161,51 +201,63 @@
   --color-warning: #F59E0B;
   --color-error: #EF4444;
   --color-info: #3B82F6;
-  --color-border: #E5E7EB;
-  --color-divider: #D1D5DB;
-  --color-disabled: #9CA3AF;
+  --color-border: #E2E8F0;
+  --color-divider: #CBD5E1;
+  --color-disabled: #94A3B8;
   --color-ring: #0EA5E9;
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-  --shadow-md: 0 3px 6px rgba(0,0,0,0.15), 0 2px 4px rgba(0,0,0,0.12);
-  --shadow-lg: 0 10px 20px rgba(0,0,0,0.15), 0 3px 6px rgba(0,0,0,0.10);
+  --shadow-sm: 0 1px 0 rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --shadow-lg: 0 8px 28px rgba(15, 23, 42, 0.09);
   --color-text: var(--color-on-surface);
   --color-text-secondary: var(--color-on-surface-variant);
+  --color-text-muted: var(--ink-faint);
   --color-bg: var(--color-background);
   --color-surface-raised: var(--color-surface-variant);
   color-scheme: light;
 }
 
 [data-theme="dark"] {
-  --color-background: #0B0B10;
-  --color-surface: #1A1A24;
-  --color-surface-variant: #2A2A35;
-  --color-on-surface: #F8FAFC;
+  --paper: #111722;
+  --bg-tinted: #1B2330;
+  --ink: #F1F5F9;
+  --ink-soft: #CBD5E1;
+  --ink-faint: #94A3B8;
+  --rule: #283143;
+  --rule-soft: #1B2330;
+  --hi: #38BDF8;
+  --grid: rgba(120, 160, 210, 0.05);
+
+  --color-background: #0B0F16;
+  --color-surface: #111722;
+  --color-surface-variant: #1B2330;
+  --color-on-surface: #F1F5F9;
   --color-on-surface-variant: #CBD5E1;
   --color-primary: #38BDF8;
-  --color-on-primary: #0F172A;
+  --color-on-primary: #0B0F16;
   --color-primary-container: #0C4A6E;
   --color-on-primary-container: #BAE6FD;
-  --color-secondary: #06D6D6;
-  --color-on-secondary: #000000;
+  --color-secondary: #22D3EE;
+  --color-on-secondary: #0B0F16;
   --color-secondary-container: #164E63;
   --color-on-secondary-container: #CFFAFE;
-  --color-accent: #FF8C42;
-  --color-on-accent: #0F172A;
+  --color-accent: #FB923C;
+  --color-on-accent: #0B0F16;
   --color-accent-container: #7C2D12;
   --color-on-accent-container: #FFEDD5;
   --color-success: #34D399;
   --color-warning: #FBBF24;
   --color-error: #F87171;
   --color-info: #60A5FA;
-  --color-border: #374151;
-  --color-divider: #4B5563;
-  --color-disabled: #6B7280;
+  --color-border: #283143;
+  --color-divider: #334155;
+  --color-disabled: #64748B;
   --color-ring: #38BDF8;
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.4);
-  --shadow-md: 0 3px 6px rgba(0,0,0,0.5);
-  --shadow-lg: 0 10px 20px rgba(0,0,0,0.6);
+  --shadow-sm: 0 1px 0 rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 1px 3px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.6);
   --color-text: var(--color-on-surface);
   --color-text-secondary: var(--color-on-surface-variant);
+  --color-text-muted: var(--ink-faint);
   --color-bg: var(--color-background);
   --color-surface-raised: var(--color-surface-variant);
   color-scheme: dark;
@@ -224,8 +276,16 @@ body {
   min-height: 100vh;
   font-family: var(--font-body);
   font-size: 16px;
+  line-height: 1.55;
   color: var(--color-on-surface);
-  background: var(--color-background);
+  background-color: var(--color-background);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
   transition: background-color var(--transition-long), color var(--transition-long);
 }
 
@@ -2900,4 +2960,745 @@ button:disabled {
 
 .error-reset {
   margin-top: var(--space-sm, 0.5rem);
+}
+
+/* ─── Console Tab Switcher ─────────────────────────────────────────────── */
+
+.header-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.console-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--color-surface-raised, rgba(255,255,255,0.06));
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 4px;
+}
+
+.console-tab {
+  padding: 0.375rem 1rem;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 150ms ease;
+  white-space: nowrap;
+}
+
+.console-tab:hover {
+  color: var(--color-text);
+  background: var(--color-surface-hover, rgba(255,255,255,0.08));
+}
+
+.console-tab.active {
+  background: var(--color-accent, #6366f1);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ─── Model Editor Main Area ──────────────────────────────────────────── */
+
+.console-editor-main {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.model-editor-panel {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+  gap: 0;
+}
+
+.model-editor-panel.loading {
+  align-items: center;
+  justify-content: center;
+}
+
+/* File tree sidebar */
+.file-tree {
+  width: 220px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  border-right: 1px solid var(--color-border);
+  background: var(--color-surface);
+  padding: var(--space-md, 1rem) 0;
+}
+
+.file-tree-title {
+  padding: 0 var(--space-md, 1rem) var(--space-sm, 0.5rem);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-secondary);
+}
+
+.file-tree-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm, 0.5rem);
+  padding: 0.3rem var(--space-md, 1rem);
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+  transition: background 100ms;
+}
+
+.file-tree-item:hover {
+  background: var(--color-surface-hover, rgba(255,255,255,0.06));
+  color: var(--color-text);
+}
+
+.file-tree-item.active {
+  background: var(--color-accent-muted, rgba(99,102,241,0.15));
+  color: var(--color-accent, #6366f1);
+  font-weight: 600;
+}
+
+.file-tree-folder {
+  padding: 0.4rem var(--space-md, 1rem) 0.2rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted, #64748b);
+}
+
+/* Monaco editor pane */
+.editor-pane {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.editor-pane.empty {
+  align-items: center;
+  justify-content: center;
+}
+
+.editor-placeholder {
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 2rem;
+}
+
+.editor-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm, 0.5rem);
+  padding: 0.5rem var(--space-md, 1rem);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+  flex-shrink: 0;
+}
+
+.editor-filename {
+  flex: 1;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8125rem;
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.editor-dirty-indicator {
+  color: var(--color-accent, #6366f1);
+  font-size: 1.2em;
+  line-height: 1;
+}
+
+.editor-error {
+  padding: 0.5rem var(--space-md, 1rem);
+  background: rgba(239, 68, 68, 0.12);
+  border-bottom: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+  font-size: 0.8125rem;
+  flex-shrink: 0;
+}
+
+.editor-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+}
+
+.editor-container {
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* Light mode adjustments for tabs */
+.console-layout.light .console-tabs {
+  background: rgba(0,0,0,0.04);
+  border-color: rgba(0,0,0,0.12);
+}
+
+.console-layout.light .console-tab:hover {
+  background: rgba(0,0,0,0.06);
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   EDITORIAL LAYER · warm-paper "flight log" treatment
+   Authoritative surface styling — overrides earlier rules by cascade order.
+   ════════════════════════════════════════════════════════════════════════ */
+
+/* — Sharpen radii to editorial 2px across console surfaces — */
+.app-shell .panel,
+.app-shell .panel-card,
+.section-container,
+.console-tabs,
+.console-tab,
+.theme-toggle,
+.btn-primary,
+.btn-secondary,
+.btn-ghost,
+.btn-export,
+.simulation-controls {
+  border-radius: var(--radius) !important;
+}
+
+/* ── App shell framing ─────────────────────────────────────────────────── */
+.app-shell {
+  max-width: 1440px;
+  padding: 0;
+}
+
+.console-container {
+  padding: 0 28px 28px;
+}
+
+/* ── Hero ──────────────────────────────────────────────────────────────── */
+.hero {
+  background: transparent;
+  border-bottom: 1px solid var(--rule);
+  padding: 72px 28px 52px;
+}
+
+.hero-controls {
+  align-items: flex-start;
+}
+
+.hero-lead {
+  max-width: 780px;
+}
+
+.hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 20px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.hero-eyebrow::before {
+  content: "";
+  width: 36px;
+  height: 1px;
+  background: var(--ink-faint);
+  flex-shrink: 0;
+}
+
+.hero-title {
+  margin: 0 0 22px;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(46px, 7vw, 92px);
+  line-height: 0.94;
+  letter-spacing: -0.035em;
+  color: var(--ink);
+  font-variation-settings: "opsz" 144;
+}
+
+.hero-title em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--hi);
+  font-variation-settings: "opsz" 144;
+}
+
+.hero-lede {
+  margin: 0 0 28px;
+  max-width: 660px;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-style: italic;
+  font-size: 21px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  font-variation-settings: "opsz" 36;
+}
+
+.hero-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 18px;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  border-radius: var(--radius);
+}
+
+.hero-note::before {
+  content: "◆";
+  color: var(--hi);
+  font-size: 13px;
+}
+
+/* ── Theme toggle — editorial pill ─────────────────────────────────────── */
+.theme-toggle {
+  background: transparent;
+  color: var(--ink-soft);
+  border: 1px solid var(--rule);
+  padding: 9px 16px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  font-weight: 500;
+}
+
+.theme-toggle:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+  box-shadow: none;
+  transform: none;
+}
+
+/* ── Console as a bordered paper sheet ─────────────────────────────────── */
+.console-layout {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+/* ── Console header ────────────────────────────────────────────────────── */
+.console-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--bg-tinted);
+}
+
+.console-title {
+  position: relative;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 19px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  padding-left: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.console-title::before {
+  content: "JS";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: var(--radius);
+  letter-spacing: 0;
+}
+
+.header-status {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.status-text {
+  color: var(--ink-soft);
+}
+
+/* status indicator dot — square editorial tick */
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 1px;
+  background: var(--ink-faint);
+}
+.status-indicator.running { background: var(--color-success); }
+.status-indicator.paused { background: var(--color-warning); }
+.status-indicator.ready { background: var(--ink-faint); }
+
+/* ── Console tabs — editorial segmented control ────────────────────────── */
+.console-tabs {
+  gap: 0;
+  padding: 0;
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.console-tab {
+  border-radius: 0;
+  border-right: 1px solid var(--rule);
+  padding: 7px 16px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  background: transparent;
+}
+
+.console-tab:last-child { border-right: none; }
+
+.console-tab:hover {
+  background: var(--bg-tinted);
+  color: var(--ink);
+}
+
+.console-tab.active,
+.console-layout.light .console-tab.active {
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 500;
+}
+
+/* ── Main grid spacing ─────────────────────────────────────────────────── */
+.console-main {
+  background: var(--rule);
+  gap: 1px;
+  padding: 1px;
+}
+
+.console-section {
+  background: var(--paper);
+}
+
+.section-container {
+  background: var(--paper);
+  gap: 1px;
+  padding: 0;
+}
+
+/* ── Panel cards — paper with rule + accent reveal strip ───────────────── */
+.panel-card {
+  position: relative;
+  background: var(--paper);
+  border: none;
+  border-radius: 0;
+  padding: 22px 22px;
+  max-height: 420px;
+  overflow: hidden auto;
+}
+
+.panel-card::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 2px;
+  background: var(--hi);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s var(--transition-base);
+  z-index: 2;
+}
+
+.panel-card:hover::after {
+  transform: scaleX(1);
+}
+
+/* divider rules between stacked cards */
+.section-container > .panel-card + .panel-card {
+  border-top: 1px solid var(--rule);
+}
+
+.primary-viewer .section-container {
+  padding: 0;
+}
+
+/* ── Panel section titles — serif with mono tick ───────────────────────── */
+.panel-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin: 0 0 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--rule-soft);
+  font-variation-settings: "opsz" 48;
+}
+
+/* mono micro-labels (event feed, file tree, etc.) */
+.panel-label,
+.file-tree-label,
+.control-label,
+.profile-label,
+.indicator-label,
+.chart-label,
+.time-label,
+.param-label,
+.hud-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* ── Stat readouts — serif numerals, mono captions ─────────────────────── */
+.stat-value {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 26px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  font-variation-settings: "opsz" 36;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.stat-item {
+  border: 1px solid var(--rule-soft);
+  border-radius: var(--radius);
+  padding: 14px;
+}
+
+/* ── Buttons — sharp, ink-fill interaction ─────────────────────────────── */
+.btn-primary,
+.btn-secondary,
+.btn-ghost,
+.btn-export {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  border-radius: var(--radius);
+  transition: all var(--transition-base);
+}
+
+.btn-primary {
+  background: var(--hi);
+  color: var(--paper);
+  border: 1px solid var(--hi);
+  box-shadow: none;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+  box-shadow: none;
+  transform: none;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--ink-soft);
+  border: 1px solid var(--rule);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink-faint);
+  border: 1px solid transparent;
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background: var(--bg-tinted);
+  color: var(--ink);
+}
+
+.btn-export {
+  background: transparent;
+  color: var(--ink-soft);
+  border: 1px solid var(--rule);
+  padding: 7px 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+
+.btn-export:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+/* ── Footer — mono ledger strip ────────────────────────────────────────── */
+.console-footer {
+  padding: 12px 24px;
+  border-top: 1px solid var(--rule);
+  background: var(--bg-tinted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  color: var(--ink-faint);
+}
+
+.footer-text {
+  font-family: var(--font-mono);
+  color: var(--ink-faint);
+}
+
+/* ── File tree + editor (editorial) ────────────────────────────────────── */
+.file-tree {
+  background: var(--bg-tinted);
+  border-right: 1px solid var(--rule);
+}
+
+.file-tree-title,
+.file-tree-header {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.file-tree-item.active {
+  background: var(--color-primary-container);
+  color: var(--color-on-primary-container);
+  font-weight: 600;
+}
+
+.editor-toolbar {
+  background: var(--bg-tinted);
+  border-bottom: 1px solid var(--rule);
+}
+
+.editor-filename {
+  font-family: var(--font-mono);
+  color: var(--ink);
+}
+
+.editor-dirty-indicator { color: var(--hi); }
+
+/* ── Loading / error states ────────────────────────────────────────────── */
+.loading-title,
+.error-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+/* ── Mobile editorial spacing ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .hero {
+    padding: 44px 20px 36px;
+  }
+  .console-container {
+    padding: 0 16px 16px;
+  }
+  .console-tabs {
+    flex-wrap: nowrap;
+  }
+}
+
+/* ── 3D viewer HUD — warm instrument overlay on dark viewport ──────────── */
+.hud-overlay {
+  background: rgba(20, 17, 13, 0.72);
+  border: 1px solid rgba(240, 233, 220, 0.14);
+  border-radius: var(--radius);
+  backdrop-filter: blur(6px);
+}
+
+.hud-item {
+  background: rgba(240, 233, 220, 0.04);
+  border: 1px solid rgba(240, 233, 220, 0.1);
+  border-radius: var(--radius);
+}
+
+.hud-label {
+  color: var(--hi);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  font-weight: 500;
+}
+
+.hud-value {
+  color: #F0E9DC;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Event severity dots (color conveys level) ─────────────────────────── */
+.event-item .event-icon {
+  font-size: 0.7rem;
+  line-height: 1;
+  color: var(--color-info);
+}
+.event-item.event-info .event-icon { color: var(--color-info); }
+.event-item.event-warning .event-icon { color: var(--color-warning); }
+.event-item.event-critical .event-icon { color: var(--color-error); }
+
+/* ── Flight-stage codes (mono two-letter, replaces emoji) ──────────────── */
+.stage-icon {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* ── File tree type marker ─────────────────────────────────────────────── */
+.file-tree-icon {
+  color: var(--ink-faint);
+  font-size: 0.7rem;
+  line-height: 1;
 }

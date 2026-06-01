@@ -39,37 +39,13 @@ export default function FlightEnvelopePanel({
   isDarkMode = false,
 }: FlightEnvelopePanelProps) {
   const stats = [
-    {
-      label: "Max Altitude",
-      value: formatAltitude(statistics.maxAltitude),
-      icon: "⬆",
-    },
-    {
-      label: "Min Altitude",
-      value: formatAltitude(statistics.minAltitude),
-      icon: "⬇",
-    },
-    { label: "Max Speed", value: formatSpeed(statistics.maxSpeed), icon: "🚀" },
-    {
-      label: "Max Vertical",
-      value: formatSpeed(statistics.maxVerticalVelocity),
-      icon: "↕",
-    },
-    {
-      label: "Flight Time",
-      value: formatTime(statistics.flightTime),
-      icon: "⏱",
-    },
-    {
-      label: "Range",
-      value: formatDistance(statistics.range),
-      icon: "📍",
-    },
-    {
-      label: "Points",
-      value: `${statistics.pointCount}`,
-      icon: "●",
-    },
+    { label: "Max Altitude", value: formatAltitude(statistics.maxAltitude) },
+    { label: "Min Altitude", value: formatAltitude(statistics.minAltitude) },
+    { label: "Max Speed", value: formatSpeed(statistics.maxSpeed) },
+    { label: "Max Vertical", value: formatSpeed(statistics.maxVerticalVelocity) },
+    { label: "Flight Time", value: formatTime(statistics.flightTime) },
+    { label: "Range", value: formatDistance(statistics.range) },
+    { label: "Points", value: `${statistics.pointCount}` },
   ];
 
   return (
@@ -79,7 +55,6 @@ export default function FlightEnvelopePanel({
       <div className="stats-grid">
         {stats.map((stat) => (
           <div key={stat.label} className="stat-item">
-            <div className="stat-icon">{stat.icon}</div>
             <div className="stat-content">
               <span className="stat-label">{stat.label}</span>
               <span className="stat-value">{stat.value}</span>

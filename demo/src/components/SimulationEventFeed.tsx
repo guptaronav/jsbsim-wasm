@@ -14,10 +14,9 @@ interface SimulationEventFeedProps {
 
 type EventFilter = "all" | "info" | "warning" | "critical";
 
-function getEventIcon(type: string, level: string): string {
-  if (level === "critical") return "🔴";
-  if (level === "warning") return "🟡";
-  return "🔵";
+function getEventIcon(_type: string, _level: string): string {
+  // Severity is conveyed by the colored dot (see .event-{level} .event-icon)
+  return "●";
 }
 
 function formatTime(timestamp: number): string {

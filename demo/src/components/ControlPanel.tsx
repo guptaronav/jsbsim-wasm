@@ -94,7 +94,7 @@ export default function ControlPanel({
       <div className="control-section">
         <div className="button-row">
           <button onClick={onStartLaunch} disabled={loading || !sdk || launchConsumed} className="btn-primary">
-            🚀 Launch
+            Launch
           </button>
           <button onClick={onPauseResume} disabled={loading || !sdk || !launchConsumed} className="btn-secondary">
             {running ? "⏸ Pause" : "▶ Resume"}
