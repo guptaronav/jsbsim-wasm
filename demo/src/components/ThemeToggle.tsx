@@ -4,9 +4,9 @@ export default function ThemeToggle() {
   const { theme, toggleTheme } = useTheme();
 
   const themeLabel = {
-    light: "☀️ Light",
-    dark: "🌙 Dark",
-    system: "🖥️ System",
+    light: "Light",
+    dark: "Dark",
+    system: "System",
   };
 
   return (

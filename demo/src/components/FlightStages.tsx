@@ -23,12 +23,12 @@ const STAGE_LABELS: Record<FlightStage, string> = {
 };
 
 const STAGE_ICONS: Record<FlightStage, string> = {
-  launch: "🚀",
-  burnout: "🔥",
-  coast: "🌤",
-  apogee: "⬆",
-  descent: "⬇",
-  landing: "🛬",
+  launch: "LA",
+  burnout: "BO",
+  coast: "CO",
+  apogee: "AP",
+  descent: "DE",
+  landing: "LD",
 };
 
 function formatTime(t: number): string {
