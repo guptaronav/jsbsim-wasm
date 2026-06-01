@@ -5,7 +5,7 @@ This repository builds [JSBSim](https://github.com/JSBSim-Team/jsbsim) to WebAss
 > [!WARNING]  
 > This toolkit is still in early development and may contain bugs or unexpected behavior.
 
-**Demo: https://0x62.github.io/jsbsim-wasm/**
+**Demo: https://guptaronav.github.io/jsbsim-wasm/**
 
 ## Highlights
 
