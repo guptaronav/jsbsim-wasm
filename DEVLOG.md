@@ -76,9 +76,12 @@ trajectory, live event feed, parameter tuning, and an in-browser model editor.
 ## Open follow-ups (see "Improvements" below)
 - [ ] Add `/Users/ronav/Desktop/jsbsim-wasm` to Spotlight Privacy to end the
       git SIGBUS crashes.
-- [ ] Resolve the `react-leaflet@5` ↔ `react@18` peer conflict (drop the
-      unused map dep, or align versions) so installs don't need
-      `--legacy-peer-deps`.
-- [ ] Restore non-color cues for event severity (accessibility regression).
-- [ ] Add a CI typecheck/test job separate from the deploy build.
+- [x] Resolve the `react-leaflet@5` ↔ `react@18` peer conflict — removed the
+      dead `TrajectoryMap` component and the `react-leaflet`/`leaflet` deps;
+      installs no longer need `--legacy-peer-deps`. _(6a70954)_
+- [x] Restore non-color cues for event severity — distinct shapes
+      (info ●, warning ▲, critical ■) + `role="img"`/`aria-label`. _(6a70954)_
+- [ ] Add a CI typecheck/test job separate from the deploy build. _(partial:
+      CI now uses `npm install`; a clean lockfile for `npm ci` + a
+      typecheck/test job are still pending.)_
 - [ ] Decide on WASM-binary storage (Git LFS vs build-in-CI).
