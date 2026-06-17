@@ -84,12 +84,15 @@ trajectory, live event feed, parameter tuning, and an in-browser model editor.
       reproducible; deploy now runs `npm ci` on Node 22 with caching. _(f25859e)_
 - [x] Respect `prefers-reduced-motion` (collapse animations/transitions).
       _(f25859e)_
+- [x] Self-host Monaco — bundle `monaco-editor` + its editor worker via Vite;
+      the model editor now works offline with no CDN dependency (kept in the
+      lazy editor chunk, so initial load is unaffected). _(995f9b8)_
 
-### Still open (external / deferred)
+### Still open (external / deferred — not fixable in-repo)
 - [ ] Add `/Users/ronav/Desktop/jsbsim-wasm` to Spotlight Privacy to end the
-      git SIGBUS crashes (macOS System Settings — manual).
+      git SIGBUS crashes (macOS System Settings — needs the GUI + sudo; the
+      single highest-leverage remaining fix).
 - [ ] WASM-binary storage: the 1.59 MB `jsbsim_wasm.wasm` is committed and
-      works; Git LFS would trim history bloat but a migration is risky on this
-      repo's submodule/Spotlight setup. Deferred intentionally.
-- [ ] Optional: self-host Monaco so the model editor works offline (currently
-      CDN-loaded).
+      works; Git LFS would trim history bloat but a migration rewrites history
+      and is risky on this repo's submodule/Spotlight setup. Deferred until a
+      clean machine is available.
