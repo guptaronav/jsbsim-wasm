@@ -73,15 +73,23 @@ trajectory, live event feed, parameter tuning, and an in-browser model editor.
 
 ---
 
-## Open follow-ups (see "Improvements" below)
-- [ ] Add `/Users/ronav/Desktop/jsbsim-wasm` to Spotlight Privacy to end the
-      git SIGBUS crashes.
+## Follow-ups
 - [x] Resolve the `react-leaflet@5` ↔ `react@18` peer conflict — removed the
       dead `TrajectoryMap` component and the `react-leaflet`/`leaflet` deps;
       installs no longer need `--legacy-peer-deps`. _(6a70954)_
 - [x] Restore non-color cues for event severity — distinct shapes
       (info ●, warning ▲, critical ■) + `role="img"`/`aria-label`. _(6a70954)_
-- [ ] Add a CI typecheck/test job separate from the deploy build. _(partial:
-      CI now uses `npm install`; a clean lockfile for `npm ci` + a
-      typecheck/test job are still pending.)_
-- [ ] Decide on WASM-binary storage (Git LFS vs build-in-CI).
+- [x] CI typecheck/test job — added `ci.yml` (app + node typechecks, 73 vitest
+      tests) on push/PR; regenerated a clean lockfile so `npm ci` is
+      reproducible; deploy now runs `npm ci` on Node 22 with caching. _(f25859e)_
+- [x] Respect `prefers-reduced-motion` (collapse animations/transitions).
+      _(f25859e)_
+
+### Still open (external / deferred)
+- [ ] Add `/Users/ronav/Desktop/jsbsim-wasm` to Spotlight Privacy to end the
+      git SIGBUS crashes (macOS System Settings — manual).
+- [ ] WASM-binary storage: the 1.59 MB `jsbsim_wasm.wasm` is committed and
+      works; Git LFS would trim history bloat but a migration is risky on this
+      repo's submodule/Spotlight setup. Deferred intentionally.
+- [ ] Optional: self-host Monaco so the model editor works offline (currently
+      CDN-loaded).
