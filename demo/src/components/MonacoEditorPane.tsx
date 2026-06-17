@@ -1,9 +1,14 @@
 import { Suspense, lazy, useEffect, useState } from "react";
 import { useTheme } from "../hooks/useTheme";
 
-const Editor = lazy(() =>
-  import("@monaco-editor/react").then((m) => ({ default: m.Editor }))
-);
+// Configure Monaco to load from our own bundle (offline, no CDN) before the
+// editor component is imported.
+const Editor = lazy(async () => {
+  const { setupMonaco } = await import("../lib/monacoSetup");
+  setupMonaco();
+  const m = await import("@monaco-editor/react");
+  return { default: m.Editor };
+});
 
 interface MonacoEditorPaneProps {
   filename: string | null;
