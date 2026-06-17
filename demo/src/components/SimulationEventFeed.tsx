@@ -14,9 +14,17 @@ interface SimulationEventFeedProps {
 
 type EventFilter = "all" | "info" | "warning" | "critical";
 
-function getEventIcon(_type: string, _level: string): string {
-  // Severity is conveyed by the colored dot (see .event-{level} .event-icon)
+// Distinct shape per severity so meaning never depends on color alone (WCAG).
+function getEventIcon(level: string): string {
+  if (level === "critical") return "■";
+  if (level === "warning") return "▲";
   return "●";
+}
+
+function getEventLevelLabel(level: string): string {
+  if (level === "critical") return "Critical";
+  if (level === "warning") return "Warning";
+  return "Info";
 }
 
 function formatTime(timestamp: number): string {
@@ -117,7 +125,14 @@ export default function SimulationEventFeed({
           filteredEvents.map((event) => (
             <div key={event.id} className={`event-item event-${event.level}`}>
               <div className="event-header">
-                <span className="event-icon">{getEventIcon(event.type, event.level)}</span>
+                <span
+                  className="event-icon"
+                  role="img"
+                  aria-label={getEventLevelLabel(event.level)}
+                  title={getEventLevelLabel(event.level)}
+                >
+                  {getEventIcon(event.level)}
+                </span>
                 <span className="event-type">{event.type.toUpperCase()}</span>
                 <span className="event-time">{formatTime(event.timestamp)}</span>
               </div>

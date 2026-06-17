@@ -32,7 +32,7 @@ jobs:
 
       - name: Install demo dependencies
         working-directory: demo
-        run: npm install --legacy-peer-deps --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
 
       - name: Build demo (Vite)
         working-directory: demo
