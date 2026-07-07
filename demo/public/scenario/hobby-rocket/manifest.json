@@ -16,7 +16,12 @@
     "machNumber": "velocities/mach",
     "vnFps": "velocities/vn-fps",
     "veFps": "velocities/ve-fps",
-    "vdFps": "velocities/vd-fps"
+    "vdFps": "velocities/vd-fps",
+    "rollRateRadPerSec": "velocities/p-rad_sec",
+    "pitchRateRadPerSec": "velocities/q-rad_sec",
+    "yawRateRadPerSec": "velocities/r-rad_sec",
+    "latAccelFps2": "accelerations/a-pilot-x-ft_sec2",
+    "lonAccelFps2": "accelerations/a-pilot-y-ft_sec2"
   },
   "rocket": {
     "thrustLbf": 24,

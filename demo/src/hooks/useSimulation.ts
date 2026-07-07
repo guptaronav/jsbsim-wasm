@@ -7,12 +7,15 @@ import type {
   StageState,
   StageTimes,
   TelemetrySample,
-  ModelEditorState,
-  ModelEditorActions,
 } from "../types";
+import { withBase } from "../lib/basePath";
+import { getModelOverride } from "../lib/modelOverrideStore";
 
-const MAX_SAMPLES = 500;
-const MAX_EVENTS = 500;
+// High enough to hold a full session (tick_ms as low as 10ms, duration_ms up
+// to several minutes) so replay/scrubbing can reach any point in the flight.
+const MAX_SAMPLES = 20000;
+const MAX_EVENTS = 20000;
+const M_TO_FT = 1 / 0.3048;
 
 const STAGE_SEQUENCE: FlightStage[] = [
   "launch",
@@ -32,13 +35,6 @@ function createStageState(): StageState {
     descent: false,
     landing: false,
   };
-}
-
-function withBase(path: string): string {
-  const base = import.meta.env.BASE_URL || "/";
-  const normalizedBase = base.endsWith("/") ? base.slice(0, -1) : base;
-  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
-  return `${normalizedBase}${normalizedPath}`;
 }
 
 async function fetchBytes(url: string): Promise<Uint8Array> {
@@ -80,7 +76,8 @@ export interface SimulationState {
   stageTimes: StageTimes;
   currentStage: FlightStage | null;
   intervalMs: number;
-  modelEditorState: ModelEditorState;
+  durationMs: number;
+  initialAltM: number;
 }
 
 export interface SimulationActions {
@@ -88,11 +85,9 @@ export interface SimulationActions {
   pauseResume: () => void;
   reload: () => void;
   setIntervalMs: (ms: number) => void;
+  setDurationMs: (ms: number) => void;
+  setInitialAltM: (m: number) => void;
   stepOnce: () => void;
-  openFile: (filePath: string) => Promise<void>;
-  saveFile: () => Promise<void>;
-  closeEditor: () => void;
-  setFileContents: (content: string) => void;
 }
 
 export function useSimulation(): SimulationState & SimulationActions {
@@ -102,6 +97,8 @@ export function useSimulation(): SimulationState & SimulationActions {
   const latestSampleRef = useRef<TelemetrySample | null>(null);
   const stageStateRef = useRef<StageState>(createStageState());
   const stageTimesRef = useRef<StageTimes>({});
+  const durationMsRef = useRef(15000);
+  const initialAltMRef = useRef(0);
 
   const [manifest, setManifest] = useState<ScenarioManifest | null>(null);
   const [status, setStatus] = useState("Preparing simulation...");
@@ -115,13 +112,18 @@ export function useSimulation(): SimulationState & SimulationActions {
   const [stageState, setStageState] = useState<StageState>(createStageState());
   const [stageTimes, setStageTimes] = useState<StageTimes>({});
   const [intervalMs, setIntervalMs] = useState(50);
-  const [modelEditorState, setModelEditorState] = useState<ModelEditorState>({
-    activeFile: null,
-    fileContents: "",
-    unsavedChanges: false,
-    isLoading: false,
-    error: null,
-  });
+  const [durationMs, setDurationMsState] = useState(15000);
+  const [initialAltM, setInitialAltMState] = useState(0);
+
+  const setDurationMs = useCallback((ms: number): void => {
+    durationMsRef.current = ms;
+    setDurationMsState(ms);
+  }, []);
+
+  const setInitialAltM = useCallback((m: number): void => {
+    initialAltMRef.current = m;
+    setInitialAltMState(m);
+  }, []);
 
   const addEvent = useCallback((entry: Omit<EventEntry, "id">): void => {
     setEvents((prev) => {
@@ -170,7 +172,17 @@ export function useSimulation(): SimulationState & SimulationActions {
       lonDeg: sdk.getPropertyValue(m.telemetry.lonDeg),
       pitchRad: sdk.getPropertyValue(m.telemetry.pitchRad),
       rollRad: sdk.getPropertyValue(m.telemetry.rollRad),
+      yawRad: sdk.getPropertyValue(m.telemetry.yawRad),
       airspeedFps: sdk.getPropertyValue(m.telemetry.airspeedFps),
+      machNumber: sdk.getPropertyValue(m.telemetry.machNumber),
+      vnFps: sdk.getPropertyValue(m.telemetry.vnFps),
+      veFps: sdk.getPropertyValue(m.telemetry.veFps),
+      vdFps: sdk.getPropertyValue(m.telemetry.vdFps),
+      rollRateRadPerSec: sdk.getPropertyValue(m.telemetry.rollRateRadPerSec),
+      pitchRateRadPerSec: sdk.getPropertyValue(m.telemetry.pitchRateRadPerSec),
+      yawRateRadPerSec: sdk.getPropertyValue(m.telemetry.yawRateRadPerSec),
+      latAccelFps2: sdk.getPropertyValue(m.telemetry.latAccelFps2),
+      lonAccelFps2: sdk.getPropertyValue(m.telemetry.lonAccelFps2),
     };
   }, []);
 
@@ -210,15 +222,9 @@ export function useSimulation(): SimulationState & SimulationActions {
         log: { console: false, stripAnsi: true },
       });
 
-      sdk.on("stdout", (entry) => {
-        addEvent({
-          timestamp: entry.timestamp,
-          simTime: sdkRef.current?.getSimTime() ?? 0,
-          kind: "log",
-          level: "info",
-          message: entry.message,
-        });
-      });
+      // JSBSim's stdout is a verbose model-load diagnostic dump (hundreds of
+      // lines per boot) — not the curated lifecycle feed the console shows.
+      // Only stderr (real warnings/errors) is surfaced as an event.
       sdk.on("stderr", (entry) => {
         addEvent({
           timestamp: entry.timestamp,
@@ -238,7 +244,8 @@ export function useSimulation(): SimulationState & SimulationActions {
       });
 
       for (const file of nextManifest.files) {
-        const bytes = await fetchBytes(withBase(file.publicPath));
+        const override = getModelOverride(file.runtimePath);
+        const bytes = override ? new TextEncoder().encode(override) : await fetchBytes(withBase(file.publicPath));
         sdk.writeDataFile(file.runtimePath, bytes);
       }
 
@@ -283,12 +290,35 @@ export function useSimulation(): SimulationState & SimulationActions {
       setRunning(false);
       setLaunched(false);
       setStatus("Simulation ended.");
+      addEvent({
+        timestamp: Date.now(),
+        simTime: sample.time,
+        kind: "lifecycle",
+        level: "info",
+        message: "simulation_ended: JSBSim run loop terminated",
+      });
       return;
     }
 
     if (!launched || launchStart === null) return;
 
     const elapsed = sample.time - launchStart;
+
+    if (elapsed * 1000 >= durationMsRef.current) {
+      sdk.setPropertyValue(m.telemetry.thrustProperty, 0);
+      setRunning(false);
+      setLaunched(false);
+      setStatus("Duration limit reached.");
+      addEvent({
+        timestamp: Date.now(),
+        simTime: sample.time,
+        kind: "lifecycle",
+        level: "info",
+        message: "simulation_ended: duration limit reached",
+      });
+      return;
+    }
+
     if (elapsed >= 0) completeStage("launch", sample.time);
     if (elapsed > m.rocket.burnDurationSec) completeStage("burnout", sample.time);
     if (stageStateRef.current.burnout && sample.velocity > 0) completeStage("coast", sample.time);
@@ -318,6 +348,13 @@ export function useSimulation(): SimulationState & SimulationActions {
       setRunning(false);
       setLaunched(false);
       setStatus("Landing detected. Press Reload to fly again.");
+      addEvent({
+        timestamp: Date.now(),
+        simTime: sample.time,
+        kind: "lifecycle",
+        level: "info",
+        message: "simulation_ended: landing detected",
+      });
       return;
     }
 
@@ -325,7 +362,7 @@ export function useSimulation(): SimulationState & SimulationActions {
     if (!stageStateRef.current.burnout) { setStatus("Boost phase."); return; }
     if (!stageStateRef.current.apogee) { setStatus("Coasting."); return; }
     setStatus("Descent phase.");
-  }, [appendSample, completeStage, launched, manifest, readTelemetry]);
+  }, [addEvent, appendSample, completeStage, launched, manifest, readTelemetry]);
 
   // Sim loop
   useEffect(() => {
@@ -343,12 +380,26 @@ export function useSimulation(): SimulationState & SimulationActions {
   const startLaunch = useCallback((): void => {
     const sdk = sdkRef.current;
     if (!sdk || !manifest || loading || launchConsumed) return;
+
+    if (initialAltMRef.current !== 0) {
+      const targetAltFt = baselineAltRef.current + initialAltMRef.current * M_TO_FT;
+      sdk.setPropertyValue(manifest.telemetry.altitudeFt, targetAltFt);
+      baselineAltRef.current = targetAltFt - initialAltMRef.current * M_TO_FT;
+    }
+
     launchStartTimeRef.current = sdk.getSimTime() + manifest.rocket.launchDelaySec;
     setLaunchConsumed(true);
     setLaunched(true);
     setRunning(true);
     setStatus("Launch sequence armed.");
-  }, [launchConsumed, loading, manifest]);
+    addEvent({
+      timestamp: Date.now(),
+      simTime: sdk.getSimTime(),
+      kind: "lifecycle",
+      level: "info",
+      message: "simulation_started",
+    });
+  }, [addEvent, launchConsumed, loading, manifest]);
 
   const pauseResume = useCallback((): void => {
     setRunning((v) => !v);
@@ -358,75 +409,6 @@ export function useSimulation(): SimulationState & SimulationActions {
     if (loading || !sdkRef.current || !manifest) return;
     runStep();
   }, [loading, manifest, runStep]);
-
-  const openFile = useCallback(async (filePath: string): Promise<void> => {
-    const sdk = sdkRef.current;
-    if (!sdk) return;
-    setModelEditorState((prev) => ({ ...prev, isLoading: true, error: null }));
-    try {
-      const content = sdk.readDataFile(filePath, "utf8") as string;
-      setModelEditorState((prev) => ({
-        ...prev,
-        activeFile: filePath,
-        fileContents: content,
-        unsavedChanges: false,
-        isLoading: false,
-      }));
-    } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : String(err);
-      setModelEditorState((prev) => ({
-        ...prev,
-        isLoading: false,
-        error: `Failed to open file: ${errorMsg}`,
-      }));
-    }
-  }, []);
-
-  const saveFile = useCallback(async (): Promise<void> => {
-    const sdk = sdkRef.current;
-    const { activeFile, fileContents } = modelEditorState;
-    if (!sdk || !activeFile) return;
-    setModelEditorState((prev) => ({ ...prev, isLoading: true, error: null }));
-    try {
-      sdk.writeDataFile(activeFile, fileContents);
-      setModelEditorState((prev) => ({
-        ...prev,
-        unsavedChanges: false,
-        isLoading: false,
-      }));
-    } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : String(err);
-      setModelEditorState((prev) => ({
-        ...prev,
-        isLoading: false,
-        error: `Failed to save file: ${errorMsg}`,
-      }));
-    }
-  }, [modelEditorState]);
-
-  const closeEditor = useCallback((): void => {
-    setModelEditorState({
-      activeFile: null,
-      fileContents: "",
-      unsavedChanges: false,
-      isLoading: false,
-      error: null,
-    });
-  }, []);
-
-  const setFileContents = useCallback((content: string): void => {
-    setModelEditorState((prev) => ({
-      ...prev,
-      fileContents: content,
-      unsavedChanges: content !== prev.fileContents,
-    }));
-  }, []);
-
-  const modelEditorActions: ModelEditorActions = {
-    openFile,
-    saveFile,
-    closeEditor,
-  };
 
   return {
     sdk: sdkRef.current,
@@ -442,14 +424,15 @@ export function useSimulation(): SimulationState & SimulationActions {
     stageTimes,
     currentStage,
     intervalMs,
-    modelEditorState,
+    durationMs,
+    initialAltM,
     startLaunch,
     pauseResume,
     reload: () => void bootstrapScenario(),
     setIntervalMs,
+    setDurationMs,
+    setInitialAltM,
     stepOnce,
-    ...modelEditorActions,
-    setFileContents,
   };
 }
 

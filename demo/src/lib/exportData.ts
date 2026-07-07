@@ -3,8 +3,11 @@
  */
 
 import type { TelemetrySample } from "../types";
+import { downloadTextFile } from "./downloadFile";
 
-const CSV_HEADER = "time_s,altitude_ft,velocity_fps,acceleration_fps2,lat_deg,lon_deg,pitch_rad,roll_rad,airspeed_fps";
+const CSV_HEADER =
+  "time_s,altitude_ft,velocity_fps,acceleration_fps2,lat_deg,lon_deg,pitch_rad,roll_rad,airspeed_fps," +
+  "yaw_rad,mach,vn_fps,ve_fps,vd_fps,roll_rate_rad_s,pitch_rate_rad_s,yaw_rate_rad_s,lat_accel_fps2,lon_accel_fps2";
 
 function sampleToRow(s: TelemetrySample): string {
   return [
@@ -17,27 +20,24 @@ function sampleToRow(s: TelemetrySample): string {
     s.pitchRad.toFixed(6),
     s.rollRad.toFixed(6),
     s.airspeedFps.toFixed(4),
+    s.yawRad.toFixed(6),
+    s.machNumber.toFixed(4),
+    s.vnFps.toFixed(4),
+    s.veFps.toFixed(4),
+    s.vdFps.toFixed(4),
+    s.rollRateRadPerSec.toFixed(6),
+    s.pitchRateRadPerSec.toFixed(6),
+    s.yawRateRadPerSec.toFixed(6),
+    s.latAccelFps2.toFixed(4),
+    s.lonAccelFps2.toFixed(4),
   ].join(",");
 }
 
 export function exportAsCsv(samples: TelemetrySample[], filename = "flight_data.csv"): void {
   const rows = [CSV_HEADER, ...samples.map(sampleToRow)];
-  const blob = new Blob([rows.join("\n")], { type: "text/csv" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = filename;
-  link.click();
-  URL.revokeObjectURL(url);
+  downloadTextFile(rows.join("\n"), filename, "text/csv");
 }
 
 export function exportAsJson(samples: TelemetrySample[], filename = "flight_data.json"): void {
-  const json = JSON.stringify({ samples }, null, 2);
-  const blob = new Blob([json], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = filename;
-  link.click();
-  URL.revokeObjectURL(url);
+  downloadTextFile(JSON.stringify({ samples }, null, 2), filename, "application/json");
 }

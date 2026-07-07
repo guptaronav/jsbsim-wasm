@@ -19,7 +19,17 @@ const makeSample = (overrides: Partial<TelemetrySample> = {}): TelemetrySample =
   lonDeg: -122.143,
   pitchRad: 0.123456,
   rollRad: 0.001234,
+  yawRad: 0.0,
   airspeedFps: 300.0,
+  machNumber: 0.27,
+  vnFps: 190.0,
+  veFps: 5.0,
+  vdFps: -50.0,
+  rollRateRadPerSec: 0.0,
+  pitchRateRadPerSec: 0.0,
+  yawRateRadPerSec: 0.0,
+  latAccelFps2: 0.0,
+  lonAccelFps2: 0.0,
   ...overrides,
 });
 

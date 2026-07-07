@@ -1,0 +1,459 @@
+.dz-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.dz-boot-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-secondary);
+}
+
+.dz-boot-screen--error {
+  color: var(--accent-error);
+}
+
+.dz-inline-error {
+  color: var(--accent-error);
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: var(--radius-sm);
+  padding: var(--space-sm) var(--space-lg);
+  margin: 0 var(--space-lg);
+  font-size: 0.85rem;
+}
+
+/* Header */
+.dz-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  padding: var(--space-lg);
+  border-bottom: 1px solid var(--surface-border);
+  flex-wrap: wrap;
+}
+
+.dz-header-title h1 {
+  font-size: 1.15rem;
+  margin: 0 0 var(--space-2xs) 0;
+  color: var(--text-primary);
+}
+
+.dz-header-title p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  max-width: 52ch;
+}
+
+.dz-header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.dz-filename {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.dz-validation-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: var(--space-2xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+}
+
+.dz-validation-badge--ok {
+  color: var(--accent-ok);
+  background: #dcfce7;
+}
+
+.dz-validation-badge--error {
+  color: var(--accent-error);
+  background: #fee2e2;
+}
+
+.dz-btn {
+  min-height: 40px;
+  padding: 0 var(--space-lg);
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.dz-btn--primary {
+  background: var(--accent-primary);
+  color: white;
+}
+
+.dz-btn--primary:hover {
+  background: var(--accent-primary-hover);
+}
+
+.dz-btn--secondary {
+  background: var(--surface-panel);
+  border-color: var(--surface-border);
+  color: var(--text-primary);
+}
+
+.dz-btn--secondary:hover {
+  border-color: var(--accent-primary);
+}
+
+.dz-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Tabs */
+.dz-tab-bar {
+  display: flex;
+  gap: 2px;
+  padding: var(--space-sm) var(--space-lg) 0;
+  background: var(--surface-bg);
+  overflow-x: auto;
+}
+
+.dz-tab {
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  padding: var(--space-sm) var(--space-lg);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  min-height: 44px;
+}
+
+.dz-tab--active {
+  background: var(--surface-panel);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.dz-tab-content {
+  flex: 1;
+  background: var(--surface-panel);
+  padding: var(--space-xl);
+}
+
+/* Generic schema form */
+.dz-field-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-lg);
+}
+
+.dz-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.dz-field label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.dz-field-unit {
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.dz-field input,
+.dz-field select {
+  min-height: 40px;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-sm);
+  padding: 0 var(--space-sm);
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  background: white;
+}
+
+.dz-field--error input,
+.dz-field--error select {
+  border-color: var(--accent-error);
+}
+
+.dz-field-help {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.dz-field-error-message {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--accent-error);
+}
+
+.dz-empty-state {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+/* Aerodynamics tab */
+.dz-aero-tab {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.dz-aero-section h3 {
+  font-size: 0.95rem;
+  margin: 0 0 var(--space-md) 0;
+  color: var(--text-primary);
+}
+
+.dz-function-card {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--surface-bg);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.dz-function-name {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--text-primary);
+}
+
+.dz-function-description {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.dz-function-list {
+  margin-bottom: var(--space-sm);
+}
+
+.dz-axis-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-md);
+}
+
+.dz-axis-card {
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+}
+
+.dz-axis-card h4 {
+  margin: 0 0 var(--space-sm) 0;
+  font-size: 0.82rem;
+  color: var(--text-primary);
+}
+
+.dz-add-function {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.dz-add-function input {
+  flex: 1;
+  min-height: 36px;
+  border: 1px dashed var(--surface-border);
+  border-radius: var(--radius-sm);
+  padding: 0 var(--space-sm);
+  font-size: 0.8rem;
+  font-family: var(--font-mono);
+}
+
+@media (max-width: 768px) {
+  .dz-header {
+    flex-direction: column;
+  }
+
+  .dz-field-grid,
+  .dz-axis-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Function cards + editor */
+.dz-function-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.dz-function-card-toggle {
+  background: none;
+  border: none;
+  text-align: left;
+  flex: 1;
+  font-size: 0.82rem;
+  color: var(--text-primary);
+  min-height: 32px;
+}
+
+.dz-function-card-remove {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1rem;
+  min-width: 24px;
+  min-height: 24px;
+}
+
+.dz-function-card-remove:hover {
+  color: var(--accent-error);
+}
+
+.dz-function-editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+  padding: var(--space-sm);
+  background: white;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-sm);
+}
+
+.dz-function-editor-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  justify-content: space-between;
+}
+
+.dz-function-name-field,
+.dz-function-description-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  flex: 1;
+}
+
+.dz-function-name-field input,
+.dz-function-description-field input {
+  min-height: 34px;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-sm);
+  padding: 0 var(--space-sm);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+
+/* Expression node editor */
+.dz-expr-node {
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-sm);
+  background: var(--surface-bg);
+}
+
+.dz-expr-type {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: var(--accent-primary);
+  display: block;
+  margin-bottom: var(--space-xs);
+}
+
+.dz-expr-leaf input {
+  width: 100%;
+  min-height: 34px;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-sm);
+  padding: 0 var(--space-sm);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+
+.dz-expr-table label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-xs);
+}
+
+.dz-expr-table input,
+.dz-expr-table textarea {
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-xs);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}
+
+.dz-expr-operands {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin: var(--space-xs) 0;
+  padding-left: var(--space-md);
+  border-left: 2px solid var(--surface-border);
+}
+
+.dz-expr-operand-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-xs);
+}
+
+.dz-expr-operand-row > .dz-expr-node {
+  flex: 1;
+}
+
+.dz-expr-remove-operand {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1rem;
+  min-width: 24px;
+  min-height: 24px;
+}
+
+.dz-expr-add-operand {
+  min-height: 32px;
+  border: 1px dashed var(--surface-border);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  background: transparent;
+}
+
+/* XML escape hatch */
+.dz-xml-escape-hatch {
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.dz-xml-loading {
+  padding: var(--space-lg);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.dz-xml-escape-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  border-top: 1px solid var(--surface-border);
+}

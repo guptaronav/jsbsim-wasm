@@ -251,6 +251,12 @@ export default function FlightViewer3D({
             {(aircraftState.attitude.pitch * (180 / Math.PI)).toFixed(1)}°
           </span>
         </div>
+        <div className="hud-item">
+          <span className="hud-label">ROLL</span>
+          <span className="hud-value">
+            {(aircraftState.attitude.roll * (180 / Math.PI)).toFixed(1)}°
+          </span>
+        </div>
       </div>
     </div>
   );

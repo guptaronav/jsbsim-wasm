@@ -12,7 +12,17 @@ export interface TelemetrySample {
   lonDeg: number;
   pitchRad: number;
   rollRad: number;
+  yawRad: number;
   airspeedFps: number;
+  machNumber: number;
+  vnFps: number;
+  veFps: number;
+  vdFps: number;
+  rollRateRadPerSec: number;
+  pitchRateRadPerSec: number;
+  yawRateRadPerSec: number;
+  latAccelFps2: number;
+  lonAccelFps2: number;
 }
 
 export interface ScenarioFile {
@@ -39,6 +49,11 @@ export interface ScenarioManifest {
     vnFps: string;  // north velocity component
     veFps: string;  // east velocity component
     vdFps: string;  // down velocity component
+    rollRateRadPerSec: string;
+    pitchRateRadPerSec: string;
+    yawRateRadPerSec: string;
+    latAccelFps2: string;
+    lonAccelFps2: string;
   };
   rocket: {
     thrustLbf: number;
@@ -49,7 +64,7 @@ export interface ScenarioManifest {
   files: ScenarioFile[];
 }
 
-export type EventKind = "stage" | "log" | "alert";
+export type EventKind = "stage" | "log" | "alert" | "lifecycle";
 export type EventLevel = "info" | "warn" | "error";
 
 export interface EventEntry {
@@ -59,20 +74,6 @@ export interface EventEntry {
   kind: EventKind;
   level: EventLevel;
   message: string;
-}
-
-export interface ModelEditorState {
-  activeFile: string | null;
-  fileContents: string;
-  unsavedChanges: boolean;
-  isLoading: boolean;
-  error: string | null;
-}
-
-export interface ModelEditorActions {
-  openFile: (filePath: string) => Promise<void>;
-  saveFile: () => Promise<void>;
-  closeEditor: () => void;
 }
 
 export interface Vector3 {

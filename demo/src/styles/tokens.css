@@ -1,0 +1,81 @@
+/*
+ * Design tokens for the two-surface platform.
+ * Mission Control (dark cockpit) and Designer (light schema editor) each own
+ * a fixed theme — surfaces do not toggle between light/dark independently.
+ * Shared primitives (spacing, radius, duration) live in :root; surface-scoped
+ * color/typography tokens live under [data-surface="…"].
+ */
+:root {
+  --space-2xs: 2px;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+  --space-2xl: 32px;
+  --space-3xl: 48px;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+  --font-sans: -apple-system, "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Mission Control — near-black instrument cockpit */
+[data-surface="mission-control"] {
+  color-scheme: dark;
+
+  --surface-bg: #0a0d12;
+  --surface-panel: #12161d;
+  --surface-panel-raised: #171c25;
+  --surface-border: #232a35;
+
+  --text-primary: #e6ebf2;
+  --text-secondary: #96a2b3;
+  --text-muted: #5c6879;
+
+  --accent-start: #2563eb;
+  --accent-stop: #dc2626;
+  --accent-ok: #22c55e;
+  --accent-warn: #f59e0b;
+  --accent-info: #38bdf8;
+
+  --chart-1: #38bdf8;
+  --chart-2: #22c55e;
+  --chart-3: #f59e0b;
+  --chart-4: #a78bfa;
+  --chart-5: #f472b6;
+
+  background: var(--surface-bg);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+}
+
+/* Model Designer — soft blue-gray editorial light theme */
+[data-surface="designer"] {
+  color-scheme: light;
+
+  --surface-bg: #eef2f7;
+  --surface-panel: #ffffff;
+  --surface-panel-raised: #ffffff;
+  --surface-border: #dbe2ea;
+
+  --text-primary: #101828;
+  --text-secondary: #475467;
+  --text-muted: #8a94a6;
+
+  --accent-primary: #2563eb;
+  --accent-primary-hover: #1d4ed8;
+  --accent-ok: #16a34a;
+  --accent-error: #dc2626;
+
+  background: var(--surface-bg);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+}
